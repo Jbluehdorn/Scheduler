@@ -1,4 +1,4 @@
-package models;
+package jbluehdorn.Scheduler.models;
 
 import java.util.Date;
 

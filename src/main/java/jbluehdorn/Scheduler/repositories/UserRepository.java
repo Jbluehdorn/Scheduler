@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package repositories;
+package jbluehdorn.Scheduler.repositories;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,9 +13,9 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Random;
-import models.User;
-import util.DB;
-import util.Hasher;
+import jbluehdorn.Scheduler.models.User;
+import jbluehdorn.Scheduler.util.DB;
+import jbluehdorn.Scheduler.util.Hasher;
 
 /**
  * Repository for User Model
