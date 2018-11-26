@@ -12,6 +12,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import jbluehdorn.Scheduler.repositories.UserRepository;
 import jbluehdorn.Scheduler.util.Logger;
 import jbluehdorn.Scheduler.view.StageManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,7 @@ public class LoginController implements FxmlController {
     @FXML
     private TextField txtUser;
     @FXML
-    private TextField txtPassword;
+    private TextField txtPass;
     @FXML
     private Button btnLogin;
     @FXML
@@ -38,7 +39,7 @@ public class LoginController implements FxmlController {
     @FXML
     private Label lblUser;
     @FXML
-    private Label lblPassword;
+    private Label lblPass;
     
     //CONSTANTS
     private final StageManager stageManager;
@@ -56,18 +57,28 @@ public class LoginController implements FxmlController {
     
     @FXML
     public void btnLoginPressed(ActionEvent event) {
+        //Jordan
+        //password
         
+        String username = txtUser.getText();
+        String password = txtPass.getText();
+        
+        try {
+            if(UserRepository.validateCredentials(username, password)) {
+                System.out.println("Login successful!");
+            }
+        } catch(Exception ex) {
+            Logger.error(ex.getMessage());
+        }
     }
     
     private void setText(Locale locale) {
         ResourceBundle rb = ResourceBundle.getBundle("login", locale);
         
         lblUser.setText(rb.getString("username") + ":");
-        lblPassword.setText(rb.getString("password") + ":");
+        lblPass.setText(rb.getString("password") + ":");
         btnLogin.setText(rb.getString("login"));
         lblStatus.setText(rb.getString("error"));
-        
-        Logger.log("Idk");
     }
     
 }

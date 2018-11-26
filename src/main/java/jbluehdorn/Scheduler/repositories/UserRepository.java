@@ -116,6 +116,26 @@ public class UserRepository {
         return ids;
     }
     
+    /**
+     * Check if a username and password match
+     * 
+     * @param username
+     * @param password
+     * @return Boolean for success
+     * @throws SQLException 
+     */
+    public static Boolean validateCredentials(String username, String password) throws SQLException {
+        String query = "select password from user where userName = '" + username + "'";
+        
+        ResultSet rs = DB.ExecQuery(query);
+        
+        if(rs.next()) {
+            return Hasher.hash(password).equals(rs.getString("password"));
+        }
+        
+        return false;
+    }
+    
     /***
      * Generate a unique 5 digit id
      * 
