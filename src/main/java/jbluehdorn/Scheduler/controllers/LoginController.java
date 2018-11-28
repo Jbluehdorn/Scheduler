@@ -11,9 +11,12 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import jbluehdorn.Scheduler.repositories.AddressRepository;
 import jbluehdorn.Scheduler.repositories.UserRepository;
 import jbluehdorn.Scheduler.util.Logger;
+import jbluehdorn.Scheduler.view.FxmlView;
 import jbluehdorn.Scheduler.view.StageManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -31,7 +34,7 @@ public class LoginController implements FxmlController {
     @FXML
     private TextField txtUser;
     @FXML
-    private TextField txtPass;
+    private PasswordField txtPass;
     @FXML
     private Button btnLogin;
     @FXML
@@ -53,6 +56,13 @@ public class LoginController implements FxmlController {
         Locale locale = new Locale(System.getProperty("user.language"), System.getProperty("user.country"));
         
         this.setText(locale);
+        
+        try {
+            Iterable Cities = AddressRepository.getCities();
+            System.out.println(Cities);
+        } catch(Exception ex) {
+            ex.printStackTrace();
+        }
     }
     
     @FXML
@@ -63,9 +73,16 @@ public class LoginController implements FxmlController {
         String username = txtUser.getText();
         String password = txtPass.getText();
         
+        btnLogin.setDisable(true);
+        
         try {
             if(UserRepository.validateCredentials(username, password)) {
-                System.out.println("Login successful!");
+                System.out.println(stageManager);
+                
+                stageManager.switchScene(FxmlView.SCHEDULER);
+            } else {
+                lblStatus.setVisible(true);
+                btnLogin.setDisable(false);
             }
         } catch(Exception ex) {
             Logger.error(ex.getMessage());

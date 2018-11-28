@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="tabbedDisplayAnchor" maxHeight="-1.0" minHeight="-1.0" xmlns:fx="http://javafx.com/fxml/1" VBox.vgrow="ALWAYS">
+    <children>
+        <TabPane tabClosingPolicy="UNAVAILABLE" AnchorPane.topAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" >
+            <tabs>
+                <fx:include fx:id="customerTab" source="CustomerTab.fxml" />
+            </tabs>
+        </TabPane>
+    </children>
+</AnchorPane>

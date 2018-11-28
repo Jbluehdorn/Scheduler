@@ -23,6 +23,8 @@ import jbluehdorn.Scheduler.util.Hasher;
  * @author Jordan
  */
 public class UserRepository {
+    private static User loggedInUser;
+    
     /**
      * Get a single User
      * 
@@ -48,7 +50,7 @@ public class UserRepository {
      * @throws SQLException 
      */
     public static Iterable<User> get() throws SQLException {
-        ArrayList<User> users = new ArrayList<User>();
+        ArrayList<User> users = new ArrayList<>();
         
         String query = "select * from user";
         
@@ -101,6 +103,7 @@ public class UserRepository {
      * Get all userIds
      * 
      * @return Iterable<Integer>
+     * @throws SQLException 
      */
     public static Iterable<Integer> getIds() throws SQLException {
         ArrayList<Integer> ids = new ArrayList<>();
@@ -125,15 +128,21 @@ public class UserRepository {
      * @throws SQLException 
      */
     public static Boolean validateCredentials(String username, String password) throws SQLException {
-        String query = "select password from user where userName = '" + username + "'";
+        String query = "select * from user where userName = '" + username + "'";
         
         ResultSet rs = DB.ExecQuery(query);
         
         if(rs.next()) {
+            loggedInUser = createUser(rs);
+            
             return Hasher.hash(password).equals(rs.getString("password"));
         }
         
         return false;
+    }
+    
+    public static User getCurrentUser() {
+        return loggedInUser;
     }
     
     /***
@@ -151,7 +160,7 @@ public class UserRepository {
         //check for existing id and adjust accordingly
         do {
             for(Integer id : ids) {
-                if(newID == id) {
+                if(newID.equals(id)) {
                     exists = true;
                     newID = 10000 + r.nextInt(20000);
                 }

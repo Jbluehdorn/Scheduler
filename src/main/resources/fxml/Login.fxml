@@ -17,7 +17,7 @@
                     <Label fx:id="lblUser" text="Username:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
                     <Label fx:id="lblPass" text="Password:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
                     <TextField fx:id="txtUser" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-                    <TextField fx:id="txtPass" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                    <PasswordField fx:id="txtPass" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                 </children>
             </GridPane>
             

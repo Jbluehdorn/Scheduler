@@ -6,6 +6,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1">
-    
-</AnchorPane>
+<VBox prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <fx:include fx:id="TabPane" source="tabs/TabPane.fxml" />
+    </children>
+</VBox>
