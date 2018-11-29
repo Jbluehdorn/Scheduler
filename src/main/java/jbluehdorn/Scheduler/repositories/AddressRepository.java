@@ -85,6 +85,48 @@ public class AddressRepository {
         return false;
     }
     
+    /***
+     * Update an address record
+     * 
+     * @param address
+     * @return true if successful, false if not
+     * @throws SQLException 
+     */
+    public static Boolean update(Address address) throws SQLException {
+        String currentUser = UserRepository.getCurrentUser().getUserName();
+        
+        //Get connection
+        Connection con = DB.getCon();
+        
+        //Calendar for date objects
+        Calendar cal = Calendar.getInstance();
+        Date now = new Date(cal.getTime().getTime());
+        
+        //Query to run
+        String query = "UPDATE address "
+                + "SET address = ?, address2 = ?, cityId = ?, postalCode = ?, phone = ?, lastUpdate = ?, lastUpdateBy = ? "
+                + "WHERE addressId = ?";
+        
+        //Create statement
+        PreparedStatement stmt = con.prepareCall(query);
+        stmt.setString(1, address.getAddress());
+        stmt.setString(2, address.getAddress2());
+        stmt.setInt(3, address.getCity().getId());
+        stmt.setString(4, address.getPostalCode());
+        stmt.setString(5, address.getPhone());
+        stmt.setDate(6, now);
+        stmt.setString(7, currentUser);
+        stmt.setInt(8, address.getId());
+        
+        //Execute and return
+        if(stmt.executeUpdate() > 0) {
+            updateAllAddresses();
+            return true;
+        }
+        
+        return false;
+    }
+    
     /**
      * Delete an address record
      * 

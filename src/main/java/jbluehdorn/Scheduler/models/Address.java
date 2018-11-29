@@ -15,8 +15,7 @@ public class Address {
     private String address2;
     private String postalCode;
     private String phone;
-    private String city;
-    private String country;
+    private City city;
     
     public Address(int id, String address, String address2, String postalCode, String phone, City city) {
         this.id = id;
@@ -24,8 +23,7 @@ public class Address {
         this.address2 = address2;
         this.postalCode = postalCode;
         this.phone = phone;
-        this.city = city.getName();
-        this.country = city.getCountry();
+        this.city = city;
     }
     
     public int getId() {
@@ -36,28 +34,52 @@ public class Address {
         return this.address;
     }
     
+    public void setAddress(String address) {
+        this.address = address;
+    }
+    
     public String getAddress2() {
         return this.address2;
+    }
+    
+    public void setAddress2(String address) {
+        this.address2 = address;
     }
     
     public String getPostalCode() {
         return this.postalCode;
     }
     
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
+    }
+    
     public String getPhone() {
         return this.phone;
     }
     
-    public String getCity() {
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+    
+    public City getCity() {
         return this.city;
     }
     
-    public String getCountry() {
-        return this.country;
+    public void setCity(City city) {
+        this.city = city;
+    }
+    
+    public String getCityName() {
+        return this.city.getName();
+    }
+    
+    public String getCountryName() {
+        return this.city.getCountry();
     }
     
     @Override
     public String toString() {
-        return String.format("%s %s, %s, %s, %s", this.address, this.address2, this.city, this.postalCode, this.country);
+        return String.format("%s %s, %s, %s, %s", this.address, this.address2, this.getCityName(), this.postalCode, this.getCountryName());
     }
 }

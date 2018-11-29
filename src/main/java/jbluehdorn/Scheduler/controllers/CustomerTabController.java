@@ -1,5 +1,6 @@
 package jbluehdorn.Scheduler.controllers;
 
+import jbluehdorn.Scheduler.models.Address;
 import jbluehdorn.Scheduler.models.City;
 import jbluehdorn.Scheduler.repositories.AddressRepository;
 import org.springframework.stereotype.Component;
@@ -20,9 +21,14 @@ public class CustomerTabController {
         City city = new City("", "", 1, 1);
         
         try {
-//            System.out.println(AddressRepository.delete(16257));
-//            System.out.println(AddressRepository.create("13289 NE 182nd St", "", city, "98072", "555-1234"));
-//            System.out.println(AddressRepository.get());
+            Iterable<Address> addresses = AddressRepository.get();
+            for(Address add : addresses) {
+                add.setAddress2("Home");
+                AddressRepository.update(add);
+            }
+            
+            System.out.println(AddressRepository.get());
+            
         } catch(Exception ex) {
             ex.printStackTrace();
         }
