@@ -20,8 +20,9 @@ public class CustomerTabController {
         City city = new City("", "", 1, 1);
         
         try {
-            System.out.println(AddressRepository.create("13289 NE 182nd St", "", city, "98072", "555-1234"));
-            System.out.println(AddressRepository.get());
+//            System.out.println(AddressRepository.delete(16257));
+//            System.out.println(AddressRepository.create("13289 NE 182nd St", "", city, "98072", "555-1234"));
+//            System.out.println(AddressRepository.get());
         } catch(Exception ex) {
             ex.printStackTrace();
         }

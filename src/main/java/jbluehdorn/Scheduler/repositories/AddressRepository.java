@@ -23,7 +23,7 @@ import jbluehdorn.Scheduler.util.DB;
  * @author Jordan
  */
 public class AddressRepository {
-    private static ArrayList<Address> allAddresses;
+    private static ArrayList<Address> allAddresses = new ArrayList<>();
     
     /***
      * Retrieve all addresses
@@ -32,7 +32,7 @@ public class AddressRepository {
      * @throws SQLException 
      */
     public static Iterable<Address> get() throws SQLException {
-        if(allAddresses == null)
+        if(allAddresses.isEmpty())
             updateAllAddresses();
         
         return allAddresses;
@@ -77,11 +77,34 @@ public class AddressRepository {
         stmt.setString(10, createdBy);
         
         //Execute and return
-        int count = stmt.executeUpdate();
-        if(count > 0)
+        if(stmt.executeUpdate() > 0) {
             updateAllAddresses();
+            return true;
+        }
         
-        return count > 0;
+        return false;
+    }
+    
+    /**
+     * Delete an address record
+     * 
+     * @param id
+     * @return success
+     * @throws SQLException 
+     */
+    public static Boolean delete(int id) throws SQLException {
+        String query = "DELETE FROM address WHERE addressId = " + id;
+        
+        Connection con = DB.getCon();
+        
+        PreparedStatement stmt = con.prepareStatement(query);
+        
+        if(stmt.executeUpdate() > 0) {
+            updateAllAddresses();
+            return true;
+        }
+        
+        return false;
     }
     
     /***

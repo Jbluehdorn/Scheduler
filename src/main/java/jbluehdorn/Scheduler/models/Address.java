@@ -58,6 +58,6 @@ public class Address {
     
     @Override
     public String toString() {
-        return String.format("%s\n%s\n%s\n%s\n%s", this.address, this.address2, this.city, this.postalCode, this.country);
+        return String.format("%s %s, %s, %s, %s", this.address, this.address2, this.city, this.postalCode, this.country);
     }
 }
