@@ -58,8 +58,9 @@ public class LoginController implements FxmlController {
         this.setText(locale);
         
         try {
-            Iterable Cities = AddressRepository.getCities();
-            System.out.println(Cities);
+            Iterable Addresses = AddressRepository.get();
+            
+            System.out.println(Addresses);
         } catch(Exception ex) {
             ex.printStackTrace();
         }
