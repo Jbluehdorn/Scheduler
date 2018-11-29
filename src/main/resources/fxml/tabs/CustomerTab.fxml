@@ -6,7 +6,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<Tab fx:id="customerTab" text="Customers" xmlns:fx="http://javafx.com/fxml/1">
+<Tab fx:id="customerTab" text="Customers" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jbluehdorn.Scheduler.controllers.CustomerTabController">
     <content>
         <Label text="Customers!" />
     </content>

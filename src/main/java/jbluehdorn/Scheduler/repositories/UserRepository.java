@@ -72,7 +72,9 @@ public class UserRepository {
      * @return Boolean
      * @throws SQLException 
      */
-    public static Boolean create(String userName, String password, String createdBy) throws SQLException {
+    public static Boolean create(String userName, String password) throws SQLException {
+        String createdBy = getCurrentUser().getUserName();
+        
         //Get connection
         Connection con = DB.getCon();
         
@@ -86,7 +88,7 @@ public class UserRepository {
         
         //Create statement
         PreparedStatement stmt = con.prepareStatement(query);
-        stmt.setInt(1, generateId());
+        stmt.setInt(1, generateUniqueId());
         stmt.setString(2, userName);
         stmt.setString(3, Hasher.hash(password));
         stmt.setBoolean(4, true);
@@ -105,7 +107,7 @@ public class UserRepository {
      * @return Iterable<Integer>
      * @throws SQLException 
      */
-    public static Iterable<Integer> getIds() throws SQLException {
+    private static Iterable<Integer> getIds() throws SQLException {
         ArrayList<Integer> ids = new ArrayList<>();
         
         String query = "select userId from user";
@@ -151,7 +153,7 @@ public class UserRepository {
      * @return Integer
      * @throws SQLException 
      */
-    private static Integer generateId() throws SQLException {
+    private static Integer generateUniqueId() throws SQLException {
         Random r = new Random(System.currentTimeMillis());
         Boolean exists = false;
         Integer newID = 10000 + r.nextInt(20000);

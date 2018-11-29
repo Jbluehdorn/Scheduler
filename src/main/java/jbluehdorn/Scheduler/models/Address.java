@@ -13,12 +13,12 @@ public class Address {
     private int id;
     private String address;
     private String address2;
-    private int postalCode;
+    private String postalCode;
     private String phone;
     private String city;
     private String country;
     
-    public Address(int id, String address, String address2, int postalCode, String phone, City city) {
+    public Address(int id, String address, String address2, String postalCode, String phone, City city) {
         this.id = id;
         this.address = address;
         this.address2 = address2;
@@ -40,7 +40,7 @@ public class Address {
         return this.address2;
     }
     
-    public int getPostalCode() {
+    public String getPostalCode() {
         return this.postalCode;
     }
     

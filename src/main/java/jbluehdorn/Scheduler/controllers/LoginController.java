@@ -56,14 +56,6 @@ public class LoginController implements FxmlController {
         Locale locale = new Locale(System.getProperty("user.language"), System.getProperty("user.country"));
         
         this.setText(locale);
-        
-        try {
-            Iterable Addresses = AddressRepository.get();
-            
-            System.out.println(Addresses);
-        } catch(Exception ex) {
-            ex.printStackTrace();
-        }
     }
     
     @FXML
