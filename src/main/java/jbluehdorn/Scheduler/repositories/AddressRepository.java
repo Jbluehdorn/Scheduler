@@ -39,6 +39,21 @@ public class AddressRepository {
     }
     
     /***
+     * Lookup a single Address
+     * 
+     * @param id
+     * @return
+     * @throws SQLException 
+     */
+    public static Address getById(int id) throws SQLException {
+        String query = "SELECT * FROM address WHERE addressId = " + id;
+        
+        ResultSet rs = DB.ExecQuery(query);
+        
+        return createAddress(rs);
+    }
+    
+    /***
      * Create and save an address
      * 
      * @param address
