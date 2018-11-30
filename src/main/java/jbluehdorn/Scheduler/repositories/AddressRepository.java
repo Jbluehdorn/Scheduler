@@ -46,11 +46,19 @@ public class AddressRepository {
      * @throws SQLException 
      */
     public static Address getById(int id) throws SQLException {
-        String query = "SELECT * FROM address WHERE addressId = " + id;
+        String query = "SELECT * FROM address "
+                + "INNER JOIN city "
+                + "ON address.cityId = city.cityId "
+                + "INNER JOIN country "
+                + "ON city.countryId = country.countryId "
+                + "WHERE addressId = " + id;
         
         ResultSet rs = DB.ExecQuery(query);
         
-        return createAddress(rs);
+        if(rs.next())
+            return createAddress(rs);
+        
+        return null;
     }
     
     /***

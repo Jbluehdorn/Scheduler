@@ -12,6 +12,36 @@ package jbluehdorn.Scheduler.models;
 public class Customer {
     private int id;
     private String name;
-    private Boolean active;
     private Address address;
+    
+    public Customer(int id, String name, Address address) {
+        this.id = id;
+        this.name = name;
+        this.address = address;
+    }
+    
+    public int getId() {
+        return this.id;
+    }
+    
+    public String getName() {
+        return this.name;
+    }
+    
+    public void setName(String name) {
+        this.name = name;
+    }
+    
+    public Address getAddress() {
+        return this.address;
+    }
+    
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+    
+    @Override
+    public String toString() {
+        return String.format("Customer %s: %s", this.id, this.name);
+    }
 }
