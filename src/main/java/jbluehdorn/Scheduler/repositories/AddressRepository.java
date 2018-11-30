@@ -180,12 +180,11 @@ public class AddressRepository {
      * @throws SQLException 
      */
     private static void updateAllAddresses() throws SQLException {
-        allAddresses = new ArrayList<>();
+        allAddresses.clear();
         
-        String query = "SELECT a.addressId, a.address, a.address2, a.postalCode, a.phone, city.city, city.cityId, country.country, country.countryId "
-                + "FROM address AS a "
+        String query = "SELECT * FROM address "
                 + "INNER JOIN city "
-                + "ON a.cityId = city.cityId "
+                + "ON address.cityId = city.cityId "
                 + "INNER JOIN country "
                 + "ON city.countryId = country.countryId";
         
