@@ -13,7 +13,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import jbluehdorn.Scheduler.repositories.AddressRepository;
 import jbluehdorn.Scheduler.repositories.UserRepository;
 import jbluehdorn.Scheduler.util.Logger;
 import jbluehdorn.Scheduler.view.FxmlView;
@@ -29,8 +28,8 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class LoginController implements FxmlController {
-
-    //FXML FIELDS BASED ON ID
+    
+    //FXML components
     @FXML
     private TextField txtUser;
     @FXML
@@ -44,7 +43,7 @@ public class LoginController implements FxmlController {
     @FXML
     private Label lblPass;
     
-    //CONSTANTS
+    //Constants
     private final StageManager stageManager;
     
     @Autowired @Lazy
