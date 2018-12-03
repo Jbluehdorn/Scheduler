@@ -156,7 +156,7 @@ public class UserRepository {
     private static Integer generateUniqueId() throws SQLException {
         Random r = new Random(System.currentTimeMillis());
         Boolean exists = false;
-        Integer newID = 10000 + r.nextInt(20000);
+        Integer newID = 10000 + r.nextInt(90000);
         Iterable<Integer> ids = getIds();
         
         //check for existing id and adjust accordingly
@@ -164,7 +164,7 @@ public class UserRepository {
             for(Integer id : ids) {
                 if(newID.equals(id)) {
                     exists = true;
-                    newID = 10000 + r.nextInt(20000);
+                    newID = 10000 + r.nextInt(90000);
                 }
             }
         } while(exists);
@@ -173,7 +173,7 @@ public class UserRepository {
     }
     
     /**
-     * Create a local User object from a java.sql.ResultSet
+     * Create a local User object from a java.SQL.ResultSet
      * 
      * @param rs
      * @return models.User

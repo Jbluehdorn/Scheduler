@@ -72,8 +72,9 @@ public class AddressRepository {
      * @return
      * @throws SQLException 
      */
-    public static Boolean create(String address, String address2, City city, String postalCode, String phone) throws SQLException {
+    public static Address create(String address, String address2, City city, String postalCode, String phone) throws SQLException {
         String createdBy = UserRepository.getCurrentUser().getUserName();
+        int id = generateUniqueId();
         
         //Get connection
         Connection con = DB.getCon();
@@ -88,7 +89,7 @@ public class AddressRepository {
         
         //Create statement
         PreparedStatement stmt = con.prepareStatement(query);
-        stmt.setInt(1, generateUniqueId());
+        stmt.setInt(1, id);
         stmt.setString(2, address);
         stmt.setString(3, address2);
         stmt.setInt(4, city.getId());
@@ -102,10 +103,10 @@ public class AddressRepository {
         //Execute and return
         if(stmt.executeUpdate() > 0) {
             updateAllAddresses();
-            return true;
+            return getById(id);
         }
         
-        return false;
+        return null;
     }
     
     /***
@@ -116,8 +117,6 @@ public class AddressRepository {
      * @throws SQLException 
      */
     public static Boolean update(Address address) throws SQLException {
-        String currentUser = UserRepository.getCurrentUser().getUserName();
-        
         //Get connection
         Connection con = DB.getCon();
         
@@ -138,7 +137,7 @@ public class AddressRepository {
         stmt.setString(4, address.getPostalCode());
         stmt.setString(5, address.getPhone());
         stmt.setDate(6, now);
-        stmt.setString(7, currentUser);
+        stmt.setString(7, UserRepository.getCurrentUser().getUserName());
         stmt.setInt(8, address.getId());
         
         //Execute and return
@@ -247,7 +246,7 @@ public class AddressRepository {
     private static int generateUniqueId() throws SQLException {
         Random r = new Random(System.currentTimeMillis());
         Boolean exists = false;
-        Integer newId = 10000 + r.nextInt(20000);
+        Integer newId = 10000 + r.nextInt(90000);
         Iterable<Integer> ids = getIds();
         
         //Check for existing id and adjust if so
@@ -255,7 +254,7 @@ public class AddressRepository {
             for(Integer id : ids) {
                 if(newId.equals(id)) {
                     exists = true;
-                    newId = 10000 + r.nextInt(20000);
+                    newId = 10000 + r.nextInt(90000);
                 }
             }
         } while(exists);

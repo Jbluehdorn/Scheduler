@@ -1,5 +1,8 @@
 package jbluehdorn.Scheduler.controllers.customer;
 
+import jbluehdorn.Scheduler.models.City;
+import jbluehdorn.Scheduler.models.Customer;
+import jbluehdorn.Scheduler.repositories.CustomerRepository;
 import org.springframework.stereotype.Component;
 
 /*
@@ -15,6 +18,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class AddController {
     public void initialize() {
-        System.out.println("Add Controller Initialized!");
+        City city = new City(1, 1);
+        try {
+            Customer customer = CustomerRepository.create("George", "1928 South Street", "Apartment 2", city, "65742", "(808)291-0218");
+            System.out.println(customer);
+        } catch(Exception ex) {
+            ex.printStackTrace();
+        }
     }
 }

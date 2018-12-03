@@ -22,6 +22,11 @@ public class City {
         this.countryId = countryId;
     }
     
+    //Only used if you know the ids you need and dont need the city/country name
+    public City(int id, int countryId) {
+        this("", "", id, countryId);
+    }
+    
     public String getName() {
         return this.name;
     }

@@ -1,11 +1,18 @@
 package jbluehdorn.Scheduler.repositories;
 
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Random;
 import jbluehdorn.Scheduler.models.Address;
+import jbluehdorn.Scheduler.models.City;
 import jbluehdorn.Scheduler.models.Customer;
 import jbluehdorn.Scheduler.util.DB;
+import jbluehdorn.Scheduler.repositories.AddressRepository;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -33,6 +40,72 @@ public class CustomerRepository {
         return allCustomers;
     }
     
+    public static Customer getById(int id) {
+        //TODO: BUILD
+        return null;
+    }
+    
+    /***
+     * Create and save a new Customer
+     * 
+     * @param name
+     * @param address
+     * @return new Customer
+     * @throws SQLException 
+     */
+    public static Customer create(String name, Address address) throws SQLException {
+        String createdBy = UserRepository.getCurrentUser().getUserName();
+        int id = generateUniqueId();
+        
+        //Get connection
+        Connection con = DB.getCon();
+        
+        //Calendar for date objects
+        Calendar cal = Calendar.getInstance();
+        Date now = new Date(cal.getTime().getTime());
+        
+        //Query to run
+        String query = "INSERT INTO customer (customerId, customerName, addressId, active, createDate, createdBy, lastUpdate, lastUpdateBy) "
+                + "values(?, ?, ?, ?, ?, ?, ?, ?)";
+        
+        //Create statement
+        PreparedStatement stmt = con.prepareStatement(query);
+        stmt.setInt(1, id);
+        stmt.setString(2, name);
+        stmt.setInt(3, address.getId());
+        stmt.setBoolean(4, true);
+        stmt.setDate(5, now);
+        stmt.setString(6, createdBy);
+        stmt.setDate(7, now);
+        stmt.setString(8, createdBy);
+        
+        //Execute and return
+        if(stmt.executeUpdate() > 0) {
+            updateAllCustomers();
+            return getById(id);
+        }
+        
+        return null;
+    }
+    
+    /***
+     * Create and save a new customer and address
+     * 
+     * @param name
+     * @param address
+     * @param address2
+     * @param city
+     * @param postalCode
+     * @param phone
+     * @return new Customer
+     * @throws SQLException 
+     */
+    public static Customer create(String name, String address, String address2, City city, String postalCode, String phone) throws SQLException {
+        Address customer_add = AddressRepository.create(address, address2, city, postalCode, phone);
+        
+        return create(name, customer_add);
+    }
+    
     /***
      * Update the allCustomers object
      * 
@@ -51,6 +124,50 @@ public class CustomerRepository {
         while(rs.next()) {
             allCustomers.add(createCustomer(rs));
         }
+    }
+    
+    /***
+     * Get all customerIds
+     * 
+     * @return Iterable<Integer>
+     * @throws SQLException 
+     */
+    private static Iterable<Integer> getIds() throws SQLException {
+        ArrayList<Integer> ids = new ArrayList<>();
+        
+        String query = "SELECT customerId FROM customer";
+        
+        ResultSet rs = DB.ExecQuery(query);
+        
+        while(rs.next()) {
+            ids.add(rs.getInt("customerId"));
+        }
+        
+        return ids;
+    }
+    
+    /***
+     * Generate a unique identifier for each customer
+     * 
+     * @return ID
+     * @throws SQLException 
+     */
+    private static int generateUniqueId() throws SQLException {
+        Random r = new Random(System.currentTimeMillis());
+        Boolean exists = false;
+        Integer newId = 10000 + r.nextInt(90000);
+        Iterable<Integer> ids = getIds();
+        
+        do {
+            for(Integer id: ids) {
+                if(newId.equals(id)) {
+                    exists = true;
+                    newId = 10000 + r.nextInt(90000);
+                }
+            }
+        } while(exists);
+        
+        return newId;
     }
     
     /***
