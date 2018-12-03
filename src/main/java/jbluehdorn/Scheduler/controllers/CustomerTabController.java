@@ -8,12 +8,14 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.util.Pair;
 import jbluehdorn.Scheduler.models.Customer;
 import jbluehdorn.Scheduler.repositories.CustomerRepository;
 import jbluehdorn.Scheduler.util.Logger;
+import jbluehdorn.Scheduler.view.FxmlView;
+import jbluehdorn.Scheduler.view.StageManager;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
-
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -25,7 +27,7 @@ import org.springframework.stereotype.Component;
  * @author Jordan
  */
 @Component
-public class CustomerTabController {
+public class CustomerTabController implements FxmlController {
     
     //FXML components
     @FXML
@@ -37,6 +39,14 @@ public class CustomerTabController {
     @FXML
     private TableColumn<Customer, String> colPhone;
     
+    //Constants
+    private final StageManager stageManager;
+    
+    @Autowired @Lazy
+    public CustomerTabController(StageManager stageManager) {
+        this.stageManager = stageManager;
+    }
+    
     public void initialize() {
         //Map column values
         colId.setCellValueFactory(customer -> new SimpleIntegerProperty(customer.getValue().getId()).asObject());
@@ -46,8 +56,9 @@ public class CustomerTabController {
         this.populateTable();
     }
     
+    @FXML
     public void btnAddPressed() {
-        
+        this.stageManager.switchScene(FxmlView.CUSTOMER_ADD);
     }
     
     private void populateTable() {

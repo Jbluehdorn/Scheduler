@@ -34,6 +34,17 @@ public enum FxmlView {
             return "/fxml/Login.fxml";
         }
         
+    },
+    CUSTOMER_ADD {
+        @Override
+        String getTitle() {
+            return getStringFromResourceBundle("customer_add.title");
+        }
+        
+        @Override
+        String getFxmlFile() {
+            return "/fxml/customer/Add.fxml";
+        }
     };
     
     abstract String getTitle();
