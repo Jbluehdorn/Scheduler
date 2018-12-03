@@ -20,7 +20,7 @@ public class AddController {
     public void initialize() {
         City city = new City(1, 1);
         try {
-            Customer customer = CustomerRepository.create("George", "1928 South Street", "Apartment 2", city, "65742", "(808)291-0218");
+            Customer customer = CustomerRepository.create("Carl", "1517 Pine St", "", city, "72136", "(425)555-1519");
             System.out.println(customer);
         } catch(Exception ex) {
             ex.printStackTrace();

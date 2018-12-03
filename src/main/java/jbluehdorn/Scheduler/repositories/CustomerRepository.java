@@ -40,8 +40,14 @@ public class CustomerRepository {
         return allCustomers;
     }
     
-    public static Customer getById(int id) {
-        //TODO: BUILD
+    public static Customer getById(int id) throws SQLException {
+        String query = "SELECT * FROM customer WHERE customerId = " + id;
+        
+        ResultSet rs = DB.ExecQuery(query);
+        
+        if(rs.next())
+            return createCustomer(rs);
+        
         return null;
     }
     
