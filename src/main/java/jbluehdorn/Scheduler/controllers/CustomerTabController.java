@@ -46,6 +46,10 @@ public class CustomerTabController {
         this.populateTable();
     }
     
+    public void btnAddPressed() {
+        
+    }
+    
     private void populateTable() {
         try {
             //Get all customers

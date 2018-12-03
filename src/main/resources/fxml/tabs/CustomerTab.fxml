@@ -7,23 +7,39 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.cell.*?> 
 <?import javafx.collections.*?> 
+<?import javafx.geometry.*?>
 
 <Tab fx:id="customerTab" text="Customers" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jbluehdorn.Scheduler.controllers.CustomerTabController">
     <content>
-        <TableView fx:id="tblCustomers">
-            <columns>
-                <TableColumn text="ID" fx:id="colId" >
-                </TableColumn>
-                
-                <TableColumn text="Name" fx:id="colName" >
-                </TableColumn>
-                
-                <TableColumn text="Phone" fx:id="colPhone">
-                </TableColumn>
-            </columns>
-            <sortOrder>
-                <fx:reference source="colId" />
-            </sortOrder>
-        </TableView>
+        <BorderPane>
+            <center>
+                <TableView fx:id="tblCustomers">
+                    <columns>
+                        <TableColumn text="ID" fx:id="colId" >
+                        </TableColumn>
+
+                        <TableColumn text="Name" fx:id="colName" >
+                        </TableColumn>
+
+                        <TableColumn text="Phone" fx:id="colPhone">
+                        </TableColumn>
+                    </columns>
+                    <sortOrder>
+                        <fx:reference source="colId" />
+                    </sortOrder>
+                </TableView>
+            </center>
+            <bottom>
+                <HBox alignment="BASELINE_RIGHT" spacing="2.5">
+                    <Button fx:id="btnDel" text="-" />
+                    <Button fx:id="btnMod" text="Edit" />
+                    <Button fx:id="btnAdd" onAction="#btnAddPressed" text="+" />
+                    
+                    <padding>
+                        <Insets right="5" bottom="2.5" left="5" top="2.5" />
+                    </padding>
+                </HBox>
+            </bottom>
+        </BorderPane>
     </content>
 </Tab>

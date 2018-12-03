@@ -2,6 +2,7 @@ package jbluehdorn.Scheduler;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
+import jbluehdorn.Scheduler.repositories.UserRepository;
 import jbluehdorn.Scheduler.view.FxmlView;
 import jbluehdorn.Scheduler.view.StageManager;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -35,7 +36,13 @@ public class SchedulerApplication extends Application {
     }
     
     protected void displayInitialScene() {
-        stageManager.switchScene(FxmlView.LOGIN);
+//        stageManager.switchScene(FxmlView.LOGIN);
+        try {
+            UserRepository.validateCredentials("admin", "password");
+            stageManager.switchScene(FxmlView.SCHEDULER);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
     
     private ConfigurableApplicationContext bootstrapSpringApplicationContext() {
