@@ -42,8 +42,6 @@
                 <Insets bottom="2.5" top="2.5" />
             </padding>
         </GridPane>
-        
-        <Button onAction="#btnTestPressed" text="Test" />
     </children>
     
     <padding>

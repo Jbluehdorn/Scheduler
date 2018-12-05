@@ -12,6 +12,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javax.xml.bind.ValidationException;
+import jbluehdorn.Scheduler.models.Address;
 import jbluehdorn.Scheduler.models.City;
 import jbluehdorn.Scheduler.repositories.AddressRepository;
 import jbluehdorn.Scheduler.util.Logger;
@@ -64,9 +66,13 @@ public class AddressController {
         }
     }
     
-    @FXML
-    public void btnTestPressed() {
-        System.out.println(this.validateForm());
+    /***
+     * Returns the address from the form
+     * 
+     * @return Address or null
+     */
+    public Address getAddress() {
+        return this.newAddressFromForm();
     }
     
     /***
@@ -74,33 +80,44 @@ public class AddressController {
      * 
      * @return success
      */
-    private Boolean validateForm() {
+    private void validateForm() throws ValidationException {
         //Validate address line 1 field
-        if(this.txtAddress.getText().equals(EMPTY_STRING)) {
-            this.showError(ADDRESS_ERROR_MSG);
-            return false;
-        }
+        if(this.txtAddress.getText().equals(EMPTY_STRING))
+            throw new ValidationException(ADDRESS_ERROR_MSG);
         
         //Validate city field
-        if(this.cmbCities.getValue() == null) {
-            this.showError(CITY_ERROR_MSG);
-            return false;
-        }
+        if(this.cmbCities.getValue() == null) 
+            throw new ValidationException(CITY_ERROR_MSG);
         
         //Validate postal code field
-        if(this.txtPostal.getText().equals(EMPTY_STRING)) {
-            this.showError(POSTAL_ERROR_MSG);
-            return false;
-        }
+        if(this.txtPostal.getText().equals(EMPTY_STRING))
+            throw new ValidationException(POSTAL_ERROR_MSG);
         
         //Validate the phone field
-        if(this.txtPhone.getText().equals(EMPTY_STRING)) {
-            this.showError(PHONE_ERROR_MSG);
-            return false;
-        }
+        if(this.txtPhone.getText().equals(EMPTY_STRING)) 
+            throw new ValidationException(PHONE_ERROR_MSG);
         
         this.hideError();
-        return true;
+    }
+    
+    private Address newAddressFromForm() {
+        //Validate the form
+        try {
+            this.validateForm();
+        } catch(ValidationException ex) {
+            this.showError(ex.getMessage());
+            
+            return null;
+        }
+        
+        //Return a new address
+        return new Address(
+                this.txtAddress.getText(),
+                this.txtAddress2.getText(),
+                this.txtPostal.getText(),
+                this.txtPhone.getText(),
+                (City) this.cmbCities.getValue()
+        );
     }
     
     private void showError(String error) {

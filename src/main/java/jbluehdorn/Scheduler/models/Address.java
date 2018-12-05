@@ -26,6 +26,10 @@ public class Address {
         this.city = city;
     }
     
+    public Address (String address, String address2, String postalCode, String phone, City city) {
+        this(0, address, address2, postalCode, phone, city);
+    }
+    
     public int getId() {
         return this.id;
     }
@@ -80,6 +84,6 @@ public class Address {
     
     @Override
     public String toString() {
-        return String.format("%s %s, %s, %s, %s", this.address, this.address2, this.getCityName(), this.postalCode, this.getCountryName());
+        return String.format("%s %s, %s, %s, %s", this.address, this.address2, this.getCityName(), this.getCountryName(), this.postalCode);
     }
 }
