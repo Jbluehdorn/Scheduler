@@ -5,9 +5,30 @@
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" fx:controller="jbluehdorn.Scheduler.controllers.customer.AddController" xmlns:fx="http://javafx.com/fxml/1">
+<VBox id="boxAdd" prefHeight="400.0" prefWidth="450.0" fx:controller="jbluehdorn.Scheduler.controllers.customer.AddController" xmlns:fx="http://javafx.com/fxml/1">
     <children>
-        <Label text="Hello!" />
+        <GridPane hgap="5" vgap="2" >
+            <children>
+                <Label text="Name:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                <TextField GridPane.columnIndex="1" GridPane.rowIndex="0" />
+            </children>
+            
+            <columnConstraints>
+                <ColumnConstraints percentWidth="20" halignment="RIGHT" />
+                <ColumnConstraints percentWidth="80" />
+            </columnConstraints>
+            
+            <padding>
+                <Insets bottom="2.5" top="2.5" />
+            </padding>
+        </GridPane>
+        
+        <fx:include fx:id="PartialAddress" source="../partials/Address.fxml" />
     </children>
-</AnchorPane>
+    
+    <padding>
+        <Insets right="5" left="5" />
+    </padding>
+</VBox>

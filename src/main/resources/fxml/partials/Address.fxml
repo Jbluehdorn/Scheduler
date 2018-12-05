@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<VBox id="boxAddress" style="-fx-border-color: #D1D1D1; -fx-border-with: 1; -fx-border-style: solid; -fx-border-radius: 5px;" fx:controller="jbluehdorn.Scheduler.controllers.partials.AddressController" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <Label fx:id="lblAddress" text="Address" />
+        
+        <Label fx:id="lblError" textFill="RED" visible="false" />
+        
+        <GridPane hgap="5" vgap="5">
+            <children>
+                <Label text="Line 1:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                <TextField fx:id="txtAddress" GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.columnSpan="3" />
+                
+                <Label text="Line 2:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                <TextField fx:id="txtAddress2" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.columnSpan="3" />
+                
+                <Label text="City:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                <ComboBox fx:id="cmbCities" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                
+                <Label text="Zip:" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                <TextField fx:id="txtPostal" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                
+                <Label text="Phone:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                <TextField fx:id="txtPhone" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            </children>
+            
+            <columnConstraints>
+                <ColumnConstraints percentWidth="15" halignment="RIGHT" />
+                <ColumnConstraints percentWidth="35" />
+                <ColumnConstraints percentWidth="15" halignment="RIGHT" />
+                <ColumnConstraints percentWidth="35" />
+            </columnConstraints>
+            
+            <padding>
+                <Insets bottom="2.5" top="2.5" />
+            </padding>
+        </GridPane>
+        
+        <Button onAction="#btnTestPressed" text="Test" />
+    </children>
+    
+    <padding>
+        <Insets top="2.5" right="2.5" bottom="2.5" left="2.5" />
+    </padding>
+</VBox>

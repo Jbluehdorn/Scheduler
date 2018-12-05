@@ -1,5 +1,8 @@
 package jbluehdorn.Scheduler.controllers.customer;
 
+import javafx.fxml.FXML;
+import javafx.scene.layout.AnchorPane;
+import jbluehdorn.Scheduler.controllers.partials.AddressController;
 import jbluehdorn.Scheduler.models.City;
 import jbluehdorn.Scheduler.models.Customer;
 import jbluehdorn.Scheduler.repositories.CustomerRepository;
@@ -17,13 +20,11 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class AddController {
+    //Components
+    @FXML
+    private AddressController PartialAddressController;
+    
     public void initialize() {
-        City city = new City(1, 1);
-        try {
-            Customer customer = CustomerRepository.create("Carl", "1517 Pine St", "", city, "72136", "(425)555-1519");
-            System.out.println(customer);
-        } catch(Exception ex) {
-            ex.printStackTrace();
-        }
+        
     }
 }
