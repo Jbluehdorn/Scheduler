@@ -26,10 +26,6 @@ public class Address {
         this.city = city;
     }
     
-    public Address (String address, String address2, String postalCode, String phone, City city) {
-        this(0, address, address2, postalCode, phone, city);
-    }
-    
     public int getId() {
         return this.id;
     }

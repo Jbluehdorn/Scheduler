@@ -5,6 +5,7 @@
  */
 package jbluehdorn.Scheduler.controllers.partials;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -104,20 +105,22 @@ public class AddressController {
         //Validate the form
         try {
             this.validateForm();
+        
+            //Return a new address
+            return AddressRepository.create(
+                    this.txtAddress.getText(),
+                    this.txtAddress2.getText(),
+                    (City) this.cmbCities.getValue(),
+                    this.txtPostal.getText(),
+                    this.txtPhone.getText()
+            );
         } catch(ValidationException ex) {
             this.showError(ex.getMessage());
-            
-            return null;
+        } catch(SQLException ex) {
+            this.showError("Address was unable to save");
         }
         
-        //Return a new address
-        return new Address(
-                this.txtAddress.getText(),
-                this.txtAddress2.getText(),
-                this.txtPostal.getText(),
-                this.txtPhone.getText(),
-                (City) this.cmbCities.getValue()
-        );
+        return null;
     }
     
     private void showError(String error) {
