@@ -7,12 +7,14 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.*?>
 
-<VBox id="boxAdd" prefHeight="400.0" prefWidth="450.0" fx:controller="jbluehdorn.Scheduler.controllers.customer.AddController" xmlns:fx="http://javafx.com/fxml/1">
+<VBox id="boxAdd" spacing="5" fx:controller="jbluehdorn.Scheduler.controllers.customer.AddController" xmlns:fx="http://javafx.com/fxml/1">
     <children>
+        <Label textFill="RED" fx:id="lblError" visible="false" />
+        
         <GridPane hgap="5" vgap="2" >
             <children>
                 <Label text="Name:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                <TextField GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                <TextField fx:id="txtName" GridPane.columnIndex="1" GridPane.rowIndex="0" />
             </children>
             
             <columnConstraints>
@@ -25,10 +27,20 @@
             </padding>
         </GridPane>
         
-        <fx:include fx:id="PartialAddress" source="../partials/Address.fxml" />
+        <fx:include fx:id="partialAddress" source="../partials/Address.fxml" />
+        
+        <GridPane>
+            <children>
+                <Button fx:id="btnSave" onAction="#btnSavePressed" alignment="CENTER" defaultButton="true" text="Save" />
+            </children>
+
+            <columnConstraints>
+                <ColumnConstraints halignment="RIGHT" hgrow="ALWAYS" />
+            </columnConstraints>
+        </GridPane>
     </children>
     
     <padding>
-        <Insets right="5" left="5" />
+        <Insets right="5" left="5" bottom="5" />
     </padding>
 </VBox>
