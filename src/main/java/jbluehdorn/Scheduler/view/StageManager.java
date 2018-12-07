@@ -29,11 +29,6 @@ public class StageManager {
         show(viewRootNodeHierarchy, view.getTitle());
     }
     
-    public void newWindow(final FxmlView view) {
-        Parent viewRootNodeHierarchy = loadViewNodeHierarchy(view.getFxmlFile());
-        showNewWindow(viewRootNodeHierarchy, view.getTitle());
-    }
-    
     private void show(final Parent rootnode, String title) {
         Scene scene = prepareScene(rootnode);
         
@@ -44,22 +39,6 @@ public class StageManager {
         
         try {
             primaryStage.show();
-        } catch(Exception ex) {
-            Logger.error(ex.getMessage());
-            ex.printStackTrace();
-        }
-    }
-    
-    private void showNewWindow(final Parent rootnode, String title) {
-        Scene scene = new Scene(rootnode);
-        
-        Stage newWindow = new Stage();
-        newWindow.setTitle(title);
-        newWindow.setScene(scene);
-        newWindow.centerOnScreen();
-        
-        try {
-            newWindow.show();
         } catch(Exception ex) {
             Logger.error(ex.getMessage());
             ex.printStackTrace();

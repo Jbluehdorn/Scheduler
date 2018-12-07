@@ -113,6 +113,13 @@ public class CustomerRepository {
         return create(name, customer_add);
     }
     
+    /***
+     * Update a customer record
+     * 
+     * @param customer
+     * @return success
+     * @throws SQLException 
+     */
     public static Boolean update(Customer customer) throws SQLException {
         //Get Connection
         Connection con = DB.getCon();
@@ -133,6 +140,23 @@ public class CustomerRepository {
         stmt.setInt(3, customer.getId());
         
         //Execute and return
+        if(stmt.executeUpdate() > 0) {
+            updateAllCustomers();
+            return true;
+        }
+        
+        return false;
+    }
+    
+    public static Boolean delete(int id) throws SQLException {
+        Customer customer = getById(id);
+        
+        String query = "UPDATE customer SET active = false WHERE customerId = " + id;
+        
+        Connection con = DB.getCon();
+        
+        PreparedStatement stmt = con.prepareStatement(query);
+        
         if(stmt.executeUpdate() > 0) {
             updateAllCustomers();
             return true;

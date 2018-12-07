@@ -1,14 +1,20 @@
 package jbluehdorn.Scheduler.controllers;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Optional;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javax.xml.bind.ValidationException;
 import jbluehdorn.Scheduler.models.Customer;
 import jbluehdorn.Scheduler.repositories.CustomerRepository;
 import jbluehdorn.Scheduler.util.Logger;
@@ -64,20 +70,56 @@ public class CustomerTabController implements FxmlController {
     
     @FXML
     public void btnModPressed() {
-        Customer customer = this.getSelectedCustomer();
-        
-        CustomerFormController.setCustomerToEdit(customer);
-        
-        this.stageManager.switchScene(FxmlView.CUSTOMER_FORM);
+        try {
+            Customer customer = this.getSelectedCustomer();
+
+            CustomerFormController.setCustomerToEdit(customer);
+            
+            this.stageManager.switchScene(FxmlView.CUSTOMER_FORM);
+        } catch(ValidationException ex) {
+            Logger.error(ex.getMessage());
+            this.showError(ex.getMessage());
+        }
     }
     
     @FXML
     public void btnDelPressed() {
-        this.stageManager.newWindow(FxmlView.LOGIN);
+        try {
+            Customer customer = this.getSelectedCustomer();
+
+            Alert alert = new Alert(AlertType.CONFIRMATION);
+            alert.setTitle("Confirm Delete");
+            alert.setHeaderText("Are you sure you want to delete " + customer.getName() + "?");
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if(result.get() == ButtonType.OK) {
+                CustomerRepository.delete(customer.getId());
+                this.populateTable();
+            }
+        } catch(ValidationException ex) {
+            Logger.error(ex.getMessage());
+            this.showError(ex.getMessage());
+        } catch(SQLException ex) {
+            Logger.error(ex.getMessage());
+            ex.printStackTrace();
+            this.showError("Delete was unsuccessful");
+        }
     }
     
-    private Customer getSelectedCustomer() {
-        return (Customer) this.tblCustomers.getSelectionModel().getSelectedItem();
+    private void showError(String error) {
+        Alert alert = new Alert(AlertType.ERROR);
+        alert.setHeaderText(error);
+        alert.showAndWait();
+    }
+    
+    private Customer getSelectedCustomer() throws ValidationException {
+        Customer customer = (Customer) this.tblCustomers.getSelectionModel().getSelectedItem();
+        
+        if(customer == null)
+            throw new ValidationException("No customer selected");
+            
+        return customer;
+        
     }
     
     private void populateTable() {
