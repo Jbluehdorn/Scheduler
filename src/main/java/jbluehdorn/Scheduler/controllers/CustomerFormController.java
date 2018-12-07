@@ -1,4 +1,4 @@
-package jbluehdorn.Scheduler.controllers.customer;
+package jbluehdorn.Scheduler.controllers;
 
 import java.sql.SQLException;
 import javafx.fxml.FXML;
@@ -29,7 +29,7 @@ import org.springframework.stereotype.Component;
  * @author Jordan
  */
 @Component
-public class AddController {
+public class CustomerFormController {
     //Components
     @FXML
     Label lblError;
@@ -49,7 +49,7 @@ public class AddController {
     private static final String DB_ERR_MSG = "Failed to save properly";
     
     @Autowired @Lazy
-    public AddController(StageManager stageManager) {
+    public CustomerFormController(StageManager stageManager) {
         this.stageManager = stageManager;
     }
     
