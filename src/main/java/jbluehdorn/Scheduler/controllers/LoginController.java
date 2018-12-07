@@ -69,6 +69,7 @@ public class LoginController implements FxmlController {
         
         try {
             if(UserRepository.validateCredentials(username, password)) {
+                Logger.login(username);
                 stageManager.switchScene(FxmlView.SCHEDULER);
             } else {
                 lblStatus.setVisible(true);
