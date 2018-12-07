@@ -40,6 +40,9 @@ public class AddressController {
     @FXML
     Label lblError;
     
+    //Data
+    private Address addressToEdit;
+    
     //Constants
     private static final String EMPTY_STRING = "";
     private static final String ADDRESS_ERROR_MSG = "Address Line 1 is a required field";
@@ -51,20 +54,14 @@ public class AddressController {
         this.populateCityCombo();
     }
     
-    /**
-     * Populates the cities ComboBox with all cities
-     */
-    private void populateCityCombo() {
-        try {
-            Iterable<City> cities = AddressRepository.getCities();
-            
-            ObservableList<City> citiesObs = FXCollections.observableArrayList((ArrayList<City>) cities);
-            
-            this.cmbCities.setItems(citiesObs);
-        } catch(Exception ex) {
-            Logger.error(ex.getMessage());
-            ex.printStackTrace();
-        }
+    public void populateEditForm(Address address) {
+        this.addressToEdit = address;
+        
+        this.txtAddress.setText(address.getAddress());
+        this.txtAddress2.setText(address.getAddress2());
+        this.cmbCities.setValue(address.getCity());
+        this.txtPostal.setText(address.getPostalCode());
+        this.txtPhone.setText(address.getPhone());
     }
     
     /***
@@ -73,7 +70,11 @@ public class AddressController {
      * @return Address or null
      */
     public Address getAddress() {
-        return this.newAddressFromForm();
+        if(this.addressToEdit != null) {
+            return this.editedAddressFromForm();
+        } else {
+            return this.newAddressFromForm();
+        }
     }
     
     /***
@@ -101,8 +102,23 @@ public class AddressController {
         this.hideError();
     }
     
+    /**
+     * Populates the cities ComboBox with all cities
+     */
+    private void populateCityCombo() {
+        try {
+            Iterable<City> cities = AddressRepository.getCities();
+            
+            ObservableList<City> citiesObs = FXCollections.observableArrayList((ArrayList<City>) cities);
+            
+            this.cmbCities.setItems(citiesObs);
+        } catch(Exception ex) {
+            Logger.error(ex.getMessage());
+            ex.printStackTrace();
+        }
+    }
+    
     private Address newAddressFromForm() {
-        //Validate the form
         try {
             this.validateForm();
         
@@ -121,6 +137,39 @@ public class AddressController {
         }
         
         return null;
+    }
+    
+    private Address editedAddressFromForm() {
+        try {
+            this.validateForm();
+            
+            addressToEdit.setAddress(this.txtAddress.getText());
+            addressToEdit.setAddress2(this.txtAddress2.getText());
+            addressToEdit.setCity((City) this.cmbCities.getSelectionModel().getSelectedItem());
+            addressToEdit.setPostalCode(this.txtPostal.getText());
+            addressToEdit.setPhone(this.txtPhone.getText());
+            
+            if(AddressRepository.update(addressToEdit)) {
+                this.clearEditForm();
+                return this.addressToEdit;
+            }
+        } catch(ValidationException ex) {
+            this.showError(ex.getMessage());
+        } catch(SQLException ex) {
+            this.showError("Address was unable to update");
+        }
+        
+        return null;
+    }
+    
+    public void clearEditForm() {
+        this.addressToEdit = null;
+        
+        this.txtAddress.setText(EMPTY_STRING);
+        this.txtAddress2.setText(EMPTY_STRING);
+        this.cmbCities.getSelectionModel().select(null);
+        this.txtPostal.setText(EMPTY_STRING);
+        this.txtPhone.setText(EMPTY_STRING);
     }
     
     private void showError(String error) {

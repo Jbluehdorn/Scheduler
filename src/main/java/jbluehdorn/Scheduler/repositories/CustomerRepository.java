@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Random;
@@ -110,6 +111,34 @@ public class CustomerRepository {
         Address customer_add = AddressRepository.create(address, address2, city, postalCode, phone);
         
         return create(name, customer_add);
+    }
+    
+    public static Boolean update(Customer customer) throws SQLException {
+        //Get Connection
+        Connection con = DB.getCon();
+        
+        //Calendar for date objects
+        Calendar cal = Calendar.getInstance();
+        Timestamp now = new Timestamp(cal.getTime().getTime());
+        
+        //Query to run
+        String query = "UPDATE customer "
+                + "SET customerName = ?, addressId = ? "
+                + "WHERE customerId = ?";
+        
+        //Create statement
+        PreparedStatement stmt = con.prepareCall(query);
+        stmt.setString(1, customer.getName());
+        stmt.setInt(2, customer.getAddress().getId());
+        stmt.setInt(3, customer.getId());
+        
+        //Execute and return
+        if(stmt.executeUpdate() > 0) {
+            updateAllCustomers();
+            return true;
+        }
+        
+        return false;
     }
     
     /***

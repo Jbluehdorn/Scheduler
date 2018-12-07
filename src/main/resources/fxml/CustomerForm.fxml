@@ -29,15 +29,10 @@
         
         <fx:include fx:id="partialAddress" source="./partials/Address.fxml" />
         
-        <GridPane>
-            <children>
-                <Button fx:id="btnSave" onAction="#btnSavePressed" alignment="CENTER" defaultButton="true" text="Save" />
-            </children>
-
-            <columnConstraints>
-                <ColumnConstraints halignment="RIGHT" hgrow="ALWAYS" />
-            </columnConstraints>
-        </GridPane>
+        <HBox alignment="BASELINE_RIGHT" spacing="2.5">
+            <Button fx:id="btnCancel" onAction="#btnCancelPressed" alignment="CENTER" text="Cancel" />
+            <Button fx:id="btnSave" onAction="#btnSavePressed" alignment="CENTER" defaultButton="true" text="Save" />
+        </HBox>
     </children>
     
     <padding>

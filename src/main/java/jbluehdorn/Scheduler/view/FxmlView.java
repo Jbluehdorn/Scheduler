@@ -35,10 +35,10 @@ public enum FxmlView {
         }
         
     },
-    CUSTOMER_ADD {
+    CUSTOMER_FORM {
         @Override
         String getTitle() {
-            return getStringFromResourceBundle("customer_add.title");
+            return getStringFromResourceBundle("customer_form.title");
         }
         
         @Override

@@ -40,6 +40,7 @@ public class CustomerFormController {
     
     //Data
     private Address add;
+    private static Customer customerToEdit;
     
     //Constants
     private final StageManager stageManager;
@@ -54,7 +55,12 @@ public class CustomerFormController {
     }
     
     public void initialize() {
-        
+        if(customerToEdit != null)
+            this.populateEditForm();
+    }
+    
+    public static void setCustomerToEdit(Customer customer) {
+        customerToEdit = customer;
     }
     
     @FXML
@@ -62,12 +68,33 @@ public class CustomerFormController {
         try {
             this.validateForm();
             
-            if(this.newCustomerFromForm() != null) {
-                this.stageManager.switchScene(FxmlView.SCHEDULER);
+            if(customerToEdit != null) {
+                if(this.updateCustomerFromForm()) {
+                    this.clearEditForm();
+                    this.stageManager.switchScene(FxmlView.SCHEDULER);
+                }
+            } else {
+                if(this.newCustomerFromForm() != null) {
+                    this.stageManager.switchScene(FxmlView.SCHEDULER);
+                }
             }
         } catch(ValidationException ex) {
             this.showError(ex.getMessage());
         }
+    }
+    
+    @FXML
+    public void btnCancelPressed() {
+        this.clearEditForm();
+        
+        this.stageManager.switchScene(FxmlView.SCHEDULER);
+    }
+    
+    public void clearEditForm() {
+        customerToEdit = null;
+
+        this.partialAddressController.clearEditForm();
+        this.txtName.setText(EMPTY_STRING);
     }
     
     /***
@@ -84,6 +111,19 @@ public class CustomerFormController {
         this.hideError();
     }
     
+    private void setAddress() throws ValidationException {
+        this.add = this.partialAddressController.getAddress();
+        
+        if(this.add == null)
+            throw new ValidationException(ADDRESS_ERR_MSG);
+    }
+    
+    private void populateEditForm() {
+        this.txtName.setText(customerToEdit.getName());
+        
+        this.partialAddressController.populateEditForm(customerToEdit.getAddress());
+    }
+    
     private Customer newCustomerFromForm() {
         try {
             return CustomerRepository.create(
@@ -97,11 +137,17 @@ public class CustomerFormController {
         }
     }
     
-    private void setAddress() throws ValidationException {
-        this.add = this.partialAddressController.getAddress();
-        
-        if(this.add == null)
-            throw new ValidationException(ADDRESS_ERR_MSG);
+    private Boolean updateCustomerFromForm() {
+        try {
+            customerToEdit.setName(this.txtName.getText());
+            customerToEdit.setAddress(this.partialAddressController.getAddress());
+            
+            return CustomerRepository.update(customerToEdit);
+        } catch(SQLException ex) {
+            Logger.error(ex.getMessage());
+            this.showError(DB_ERR_MSG);
+            return false;
+        }
     }
     
     private void showError(String error) {

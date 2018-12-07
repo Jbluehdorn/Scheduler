@@ -6,6 +6,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import jbluehdorn.Scheduler.models.Customer;
@@ -58,7 +59,20 @@ public class CustomerTabController implements FxmlController {
     
     @FXML
     public void btnAddPressed() {
-        this.stageManager.switchScene(FxmlView.CUSTOMER_ADD);
+        this.stageManager.switchScene(FxmlView.CUSTOMER_FORM);
+    }
+    
+    @FXML
+    public void btnModPressed() {
+        Customer customer = this.getSelectedCustomer();
+        
+        CustomerFormController.setCustomerToEdit(customer);
+        
+        this.stageManager.switchScene(FxmlView.CUSTOMER_FORM);
+    }
+    
+    private Customer getSelectedCustomer() {
+        return (Customer) this.tblCustomers.getSelectionModel().getSelectedItem();
     }
     
     private void populateTable() {

@@ -32,7 +32,7 @@
             <bottom>
                 <HBox alignment="BASELINE_RIGHT" spacing="2.5">
                     <Button fx:id="btnDel" text="-" />
-                    <Button fx:id="btnMod" text="Edit" />
+                    <Button fx:id="btnMod" onAction="#btnModPressed" text="Edit" />
                     <Button fx:id="btnAdd" onAction="#btnAddPressed" text="+" />
                     
                     <padding>
