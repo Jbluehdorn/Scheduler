@@ -71,6 +71,11 @@ public class CustomerTabController implements FxmlController {
         this.stageManager.switchScene(FxmlView.CUSTOMER_FORM);
     }
     
+    @FXML
+    public void btnDelPressed() {
+        this.stageManager.newWindow(FxmlView.LOGIN);
+    }
+    
     private Customer getSelectedCustomer() {
         return (Customer) this.tblCustomers.getSelectionModel().getSelectedItem();
     }
