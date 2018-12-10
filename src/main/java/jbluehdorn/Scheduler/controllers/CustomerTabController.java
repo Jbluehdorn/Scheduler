@@ -15,7 +15,9 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javax.xml.bind.ValidationException;
+import jbluehdorn.Scheduler.models.Appointment;
 import jbluehdorn.Scheduler.models.Customer;
+import jbluehdorn.Scheduler.repositories.AppointmentRepository;
 import jbluehdorn.Scheduler.repositories.CustomerRepository;
 import jbluehdorn.Scheduler.util.Logger;
 import jbluehdorn.Scheduler.view.FxmlView;
@@ -61,6 +63,13 @@ public class CustomerTabController implements FxmlController {
         colPhone.setCellValueFactory(customer -> new SimpleStringProperty(customer.getValue().getAddress().getPhone()));
         
         this.populateTable();
+        
+        try {
+            Iterable<Appointment> apps = AppointmentRepository.get();
+            System.out.println(apps);
+        } catch(Exception ex) {
+            ex.printStackTrace();
+        }
     }
     
     @FXML

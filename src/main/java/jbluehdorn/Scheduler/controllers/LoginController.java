@@ -59,9 +59,6 @@ public class LoginController implements FxmlController {
     
     @FXML
     public void btnLoginPressed(ActionEvent event) {
-        //Jordan
-        //password
-        
         String username = txtUser.getText();
         String password = txtPass.getText();
         
