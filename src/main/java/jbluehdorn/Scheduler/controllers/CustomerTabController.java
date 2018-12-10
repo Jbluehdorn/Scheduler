@@ -64,6 +64,15 @@ public class CustomerTabController implements FxmlController {
         colPhone.setCellValueFactory(customer -> new SimpleStringProperty(customer.getValue().getAddress().getPhone()));
         
         this.populateTable();
+        
+        try {
+            Appointment app = AppointmentRepository.getById(1);
+            app.setTitle("Updated Title!!!");
+            System.out.print(AppointmentRepository.update(app));
+            
+        } catch(Exception ex) {
+            ex.printStackTrace();
+        }
     }
     
     @FXML

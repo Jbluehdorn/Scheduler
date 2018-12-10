@@ -35,14 +35,30 @@ public class Appointment {
     }
     
     public int getId() { return this.id; }
+    
     public Customer getCustomer() { return this.customer; }
+    public void setCustomer(Customer customer) { this.customer = customer; }
+    
     public String getTitle() { return this.title; }
+    public void setTitle(String title) { this.title = title; }
+    
     public String getDescription() { return this.description; }
+    public void setDescription(String description) { this.description = description; }
+    
     public String getLocation() { return this.location; }
+    public void setLocation(String location) { this.location = location; }
+    
     public String getContact() { return this.contact; }
+    public void setContact(String contact) { this.contact = contact; }
+    
     public String getUrl() { return this.url; }
+    public void setUrl(String url) { this.url = url; }
+    
     public Date getStartDate() { return this.start; }
+    public void setStartDate(Date start) { this.start = start; }
+    
     public Date getEndDate() { return this.end; }
+    public void setEndDate(Date end) { this.end = end; }
     
     @Override
     public String toString() {

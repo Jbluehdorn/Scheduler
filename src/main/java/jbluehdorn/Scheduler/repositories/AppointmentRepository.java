@@ -54,6 +54,20 @@ public class AppointmentRepository {
                 .orElse(null);
     }
     
+    /***
+     * Create a new Appointment record
+     * 
+     * @param title
+     * @param description
+     * @param location
+     * @param contact
+     * @param url
+     * @param customer
+     * @param start
+     * @param end
+     * @return the new Appointment
+     * @throws SQLException 
+     */
     public static Appointment create(String title, String description, String location, String contact, String url, Customer customer, Date start, Date end) throws SQLException {
         String createdBy = UserRepository.getCurrentUser().getUserName();
         int id = generateUniqueId();
@@ -92,6 +106,51 @@ public class AppointmentRepository {
         }
         
         return null;
+    }
+    
+    /***
+     * Update a single record
+     * 
+     * @param appointment
+     * @return success
+     * @throws SQLException 
+     */
+    public static Boolean update(Appointment appointment) throws SQLException {
+        String updateBy = UserRepository.getCurrentUser().getUserName();
+        
+        //Get Connection
+        Connection con = DB.getCon();
+        
+        //Calendar for date Objects
+        Calendar cal = Calendar.getInstance();
+        java.sql.Date now = new java.sql.Date(cal.getTime().getTime());
+        
+        //Query to run
+        String query = "UPDATE appointment "
+                + "SET customerId = ?, title = ?, description = ?, location = ?, contact = ?, url = ?, start = ?, end = ?, lastUpdate = ?, lastUpdateBy = ? "
+                + "WHERE appointmentId = ?";
+        
+        //Create statement
+        PreparedStatement stmt = con.prepareStatement(query);
+        stmt.setInt(1, appointment.getCustomer().getId());
+        stmt.setString(2, appointment.getTitle());
+        stmt.setString(3, appointment.getDescription());
+        stmt.setString(4, appointment.getLocation());
+        stmt.setString(5, appointment.getContact());
+        stmt.setString(6, appointment.getUrl());
+        stmt.setDate(7, new java.sql.Date(appointment.getStartDate().getTime()));
+        stmt.setDate(8, new java.sql.Date(appointment.getEndDate().getTime()));
+        stmt.setDate(9, now);
+        stmt.setString(10, updateBy);
+        stmt.setInt(11, appointment.getId());
+        
+        //Execute and return
+        if(stmt.executeUpdate() > 0) {
+            updateAllAppointments();
+            return true;
+        }
+        
+        return false;
     }
     
     /***
