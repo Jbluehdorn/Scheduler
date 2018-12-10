@@ -154,6 +154,28 @@ public class AppointmentRepository {
     }
     
     /***
+     * Delete a single record
+     * 
+     * @param id
+     * @return success
+     * @throws SQLException 
+     */
+    public static Boolean delete(int id) throws SQLException {
+        String query = "DELETE FROM appointment WHERE appointmentId = " + id;
+        
+        Connection con = DB.getCon();
+        
+        PreparedStatement stmt = con.prepareStatement(query);
+        
+        if(stmt.executeUpdate() > 0) {
+            updateAllAppointments();
+            return true;
+        }
+        
+        return false;
+    }
+    
+    /***
      * Updates the static allAppointments Iterable
      * 
      * !!THIS MUST BE RUN ANY TIME AN UPDATE IS MADE TO APPOINTMENTS!!
