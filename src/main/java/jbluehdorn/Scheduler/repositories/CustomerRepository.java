@@ -42,14 +42,14 @@ public class CustomerRepository {
     }
     
     public static Customer getById(int id) throws SQLException {
-        String query = "SELECT * FROM customer WHERE customerId = " + id;
+        if(allCustomers.isEmpty())
+            updateAllCustomers();
         
-        ResultSet rs = DB.ExecQuery(query);
-        
-        if(rs.next())
-            return createCustomer(rs);
-        
-        return null;
+        //Lambda expression used here as predicate for search
+        return allCustomers.stream()
+                .filter(customer -> customer.getId() == id)
+                .findFirst()
+                .orElse(null);
     }
     
     /***

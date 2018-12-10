@@ -65,8 +65,8 @@ public class CustomerTabController implements FxmlController {
         this.populateTable();
         
         try {
-            Iterable<Appointment> apps = AppointmentRepository.get();
-            System.out.println(apps);
+            Appointment app = AppointmentRepository.getById(1);
+            System.out.println(app);
         } catch(Exception ex) {
             ex.printStackTrace();
         }
