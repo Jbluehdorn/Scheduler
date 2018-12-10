@@ -5,9 +5,15 @@
  */
 package jbluehdorn.Scheduler.repositories;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Random;
+import java.util.stream.Collectors;
 import jbluehdorn.Scheduler.models.Appointment;
 import jbluehdorn.Scheduler.models.Customer;
 import jbluehdorn.Scheduler.util.DB;
@@ -26,8 +32,7 @@ public class AppointmentRepository {
      * @throws SQLException 
      */
     public static Iterable<Appointment> get() throws SQLException {
-        if(allAppointments.isEmpty())
-            updateAllAppointments();
+        updateIfEmpty();
         
         return allAppointments;
     }
@@ -40,14 +45,53 @@ public class AppointmentRepository {
      * @throws SQLException 
      */
     public static Appointment getById(int id) throws SQLException {
-        if(allAppointments.isEmpty())
-            updateAllAppointments();
+        updateIfEmpty();
         
         //Lamba expression used here as predicate for search
         return allAppointments.stream()
                 .filter(app -> app.getId() == id)
                 .findFirst()
                 .orElse(null);
+    }
+    
+    public static Appointment create(String title, String description, String location, String contact, String url, Customer customer, Date start, Date end) throws SQLException {
+        String createdBy = UserRepository.getCurrentUser().getUserName();
+        int id = generateUniqueId();
+        
+        //Get connection
+        Connection con = DB.getCon();
+        
+        //Calendar for Date Objects
+        Calendar cal = Calendar.getInstance();
+        java.sql.Date now = new java.sql.Date(cal.getTime().getTime());
+        
+        //Query to run
+        String query = "INSERT INTO appointment (appointmentId, customerId, title, description, location, contact, url, start, end, createDate, createdBy, lastUpdate, lastUpdateBy) "
+                + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        
+        //Create statement
+        PreparedStatement stmt = con.prepareStatement(query);
+        stmt.setInt(1, id);
+        stmt.setInt(2, customer.getId());
+        stmt.setString(3, title);
+        stmt.setString(4, description);
+        stmt.setString(5, location);
+        stmt.setString(6, contact);
+        stmt.setString(7, url);
+        stmt.setDate(8, new java.sql.Date(start.getTime()));
+        stmt.setDate(9, new java.sql.Date(end.getTime()));
+        stmt.setDate(10, now);
+        stmt.setString(11, createdBy);
+        stmt.setDate(12, now);
+        stmt.setString(13, createdBy);
+        
+        //Execute and return
+        if(stmt.executeUpdate() > 0) {
+            updateAllAppointments();
+            return getById(id);
+        }
+        
+        return null;
     }
     
     /***
@@ -90,5 +134,53 @@ public class AppointmentRepository {
                 rs.getDate("start"),
                 rs.getDate("end")
         );
+    }
+    
+    /***
+     * Update the master list if empty
+     * 
+     * @throws SQLException 
+     */
+    private static void updateIfEmpty() throws SQLException {
+        if(allAppointments.isEmpty())
+            updateAllAppointments();
+    }
+    
+    /***
+     * Get all Appointment ids
+     * 
+     * @return Iterable of ids
+     * @throws SQLException 
+     */
+    private static Iterable<Integer> getIds() throws SQLException {
+        updateIfEmpty();
+        
+        return allAppointments.stream()
+                .map(app -> app.getId())
+                .collect(Collectors.toList());
+    }
+    
+    /***
+     * Generate a unique id
+     * 
+     * @return new id
+     * @throws SQLException 
+     */
+    private static int generateUniqueId() throws SQLException {
+        Random r = new Random(System.currentTimeMillis());
+        Boolean exists = false;
+        Integer newId = 10000 + r.nextInt(90000);
+        Iterable<Integer> ids = getIds();
+        
+        do {
+            for(Integer id : ids) {
+                if(newId.equals(id)) {
+                    exists = true;
+                    newId = 10000 + r.nextInt(90000);
+                }
+            }
+        } while(exists);
+        
+        return newId;
     }
 }

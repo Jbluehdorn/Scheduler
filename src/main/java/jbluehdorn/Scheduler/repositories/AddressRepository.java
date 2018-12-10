@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.sql.Date;
 import java.util.Random;
+import java.util.stream.Collectors;
 import jbluehdorn.Scheduler.models.Address;
 import jbluehdorn.Scheduler.models.City;
 import jbluehdorn.Scheduler.util.DB;
@@ -32,8 +33,7 @@ public class AddressRepository {
      * @throws SQLException 
      */
     public static Iterable<Address> get() throws SQLException {
-        if(allAddresses.isEmpty())
-            updateAllAddresses();
+        updateIfEmpty();
         
         return allAddresses;
     }
@@ -46,8 +46,7 @@ public class AddressRepository {
      * @throws SQLException 
      */
     public static Address getById(int id) throws SQLException {
-        if(allAddresses.isEmpty())
-            updateAllAddresses();
+        updateIfEmpty();
         
         //Lambda expression used here as predicate for search
         return allAddresses.stream()
@@ -213,23 +212,27 @@ public class AddressRepository {
     }
     
     /***
+     * Update master list if empty
+     * 
+     * @throws SQLException 
+     */
+    private static void updateIfEmpty() throws SQLException {
+        if(allAddresses.isEmpty())
+            updateAllAddresses();
+    }
+    
+    /***
      * Get all addressIds
      * 
      * @return Iterable<Integer>
      * @throws SQLException 
      */
     private static Iterable<Integer> getIds() throws SQLException {
-        ArrayList<Integer> ids = new ArrayList<>();
+        updateIfEmpty();
         
-        String query = "SELECT addressId FROM address";
-        
-        ResultSet rs = DB.ExecQuery(query);
-        
-        while(rs.next()) {
-            ids.add(rs.getInt("addressID"));
-        }
-        
-        return ids;
+        return allAddresses.stream()
+                .map(add -> add.getId())
+                .collect(Collectors.toList());
     }
     
     /***

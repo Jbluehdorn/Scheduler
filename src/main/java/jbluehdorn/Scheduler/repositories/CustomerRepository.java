@@ -9,6 +9,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Random;
+import java.util.stream.Collectors;
 import jbluehdorn.Scheduler.models.Address;
 import jbluehdorn.Scheduler.models.City;
 import jbluehdorn.Scheduler.models.Customer;
@@ -186,23 +187,27 @@ public class CustomerRepository {
     }
     
     /***
+     * Update the master list if empty
+     * 
+     * @throws SQLException 
+     */
+    private static void updateIfEmpty() throws SQLException {
+        if(allCustomers.isEmpty())
+            updateAllCustomers();
+    }
+    
+    /***
      * Get all customerIds
      * 
      * @return Iterable<Integer>
      * @throws SQLException 
      */
     private static Iterable<Integer> getIds() throws SQLException {
-        ArrayList<Integer> ids = new ArrayList<>();
+        updateIfEmpty();
         
-        String query = "SELECT customerId FROM customer";
-        
-        ResultSet rs = DB.ExecQuery(query);
-        
-        while(rs.next()) {
-            ids.add(rs.getInt("customerId"));
-        }
-        
-        return ids;
+        return allCustomers.stream()
+                .map(cust -> cust.getId())
+                .collect(Collectors.toList());
     }
     
     /***

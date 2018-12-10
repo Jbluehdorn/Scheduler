@@ -2,6 +2,7 @@ package jbluehdorn.Scheduler.controllers;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Optional;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -63,13 +64,6 @@ public class CustomerTabController implements FxmlController {
         colPhone.setCellValueFactory(customer -> new SimpleStringProperty(customer.getValue().getAddress().getPhone()));
         
         this.populateTable();
-        
-        try {
-            Appointment app = AppointmentRepository.getById(1);
-            System.out.println(app);
-        } catch(Exception ex) {
-            ex.printStackTrace();
-        }
     }
     
     @FXML
