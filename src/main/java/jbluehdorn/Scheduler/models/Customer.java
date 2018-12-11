@@ -42,6 +42,6 @@ public class Customer {
     
     @Override
     public String toString() {
-        return String.format("Customer %s: %s", this.id, this.name);
+        return this.name;
     }
 }
