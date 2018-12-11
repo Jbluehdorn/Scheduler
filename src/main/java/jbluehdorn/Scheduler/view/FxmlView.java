@@ -45,6 +45,17 @@ public enum FxmlView {
         String getFxmlFile() {
             return "/fxml/CustomerForm.fxml";
         }
+    },
+    APPOINTMENT_FORM {
+        @Override
+        String getTitle() {
+            return getStringFromResourceBundle("appointment_form.title");
+        }
+
+        @Override
+        String getFxmlFile() {
+            return "/fxml/AppointmentForm.fxml";
+        }
     };
     
     abstract String getTitle();

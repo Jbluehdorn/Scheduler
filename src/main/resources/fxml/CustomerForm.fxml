@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.*?>
 
-<VBox id="boxAdd" spacing="5" fx:controller="jbluehdorn.Scheduler.controllers.CustomerFormController" xmlns:fx="http://javafx.com/fxml/1">
+<VBox id="boxCustomer" spacing="5" fx:controller="jbluehdorn.Scheduler.controllers.CustomerFormController" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <Label textFill="RED" fx:id="lblError" visible="false" />
         

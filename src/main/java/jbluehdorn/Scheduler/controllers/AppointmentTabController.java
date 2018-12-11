@@ -12,7 +12,11 @@ import javafx.scene.control.TableView;
 import jbluehdorn.Scheduler.models.Appointment;
 import jbluehdorn.Scheduler.repositories.AppointmentRepository;
 import jbluehdorn.Scheduler.util.Logger;
+import jbluehdorn.Scheduler.view.FxmlView;
+import jbluehdorn.Scheduler.view.StageManager;
 import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -40,6 +44,14 @@ public class AppointmentTabController {
     @FXML
     private TableColumn<Appointment, String> colEnd;
     
+    //Constants
+    private final StageManager stageManager;
+    
+    @Autowired @Lazy
+    public AppointmentTabController(StageManager stageManager) {
+        this.stageManager = stageManager;
+    }
+    
     public void initialize() {
         this.mapColumns();
         this.populateTable();
@@ -47,7 +59,7 @@ public class AppointmentTabController {
     
     @FXML
     public void btnAddPressed() {
-        
+        this.stageManager.switchScene(FxmlView.APPOINTMENT_FORM);
     }
     
     @FXML
@@ -60,6 +72,9 @@ public class AppointmentTabController {
         
     }
     
+    /***
+     * Map the table columns to the appropriate Appointment fields
+     */
     private void mapColumns() {
         DateFormat format = new SimpleDateFormat("M/dd h:mm a");
         
@@ -70,6 +85,9 @@ public class AppointmentTabController {
         colEnd.setCellValueFactory(app -> new SimpleStringProperty(format.format(app.getValue().getEndDate())));
     }
     
+    /***
+     * Get appointments and throw them in the table
+     */
     private void populateTable() {
         try {
             Iterable<Appointment> apps = AppointmentRepository.get();
