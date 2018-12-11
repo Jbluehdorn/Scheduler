@@ -11,6 +11,7 @@
         <TabPane tabClosingPolicy="UNAVAILABLE" AnchorPane.topAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" >
             <tabs>
                 <fx:include fx:id="customerTab" source="CustomerTab.fxml" />
+                <fx:include fx:id="appointmentTab" source="AppointmentTab.fxml" />
             </tabs>
         </TabPane>
     </children>

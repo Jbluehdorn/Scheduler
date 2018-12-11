@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<Tab fx:id="appointmentTab" text="Appointments" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jbluehdorn.Scheduler.controllers.AppointmentTabController">
+    <content>
+        <BorderPane>
+            <top>
+            </top>
+            <center>
+                <TableView fx:id="tblAppointments">
+                    <columns>
+                        <TableColumn text="Customer" fx:id="colCust"></TableColumn>
+                        <TableColumn text="Title" fx:id="colTitle"></TableColumn>
+                        <TableColumn text="Location" fx:id="colLocation"></TableColumn>
+                        <TableColumn text="Start" fx:id="colStart"></TableColumn>
+                        <TableColumn text="End" fx:id="colEnd"></TableColumn>
+                    </columns>
+                    
+                    <sortOrder>
+                        <fx:reference source="colStart" />
+                    </sortOrder>
+                </TableView>
+            </center>
+            <bottom>
+                <HBox alignment="BASELINE_RIGHT" spacing="2.5">
+                    <Button fx:id="btnDel" onAction="#btnDelPressed" text="-" />
+                    <Button fx:id="btnMod" onAction="#btnModPressed" text="Edit" />
+                    <Button fx:id="btnAdd" onAction="#btnAddPressed" text="+" />
+                    
+                    <padding>
+                        <Insets right="5" bottom="2.5" left="5" top="2.5" />
+                    </padding>
+                </HBox>
+            </bottom>
+        </BorderPane>
+    </content>
+</Tab>

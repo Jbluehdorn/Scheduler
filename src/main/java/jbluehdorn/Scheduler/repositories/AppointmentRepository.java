@@ -212,8 +212,8 @@ public class AppointmentRepository {
                 rs.getString("contact"),
                 rs.getString("url"),
                 customer,
-                rs.getDate("start"),
-                rs.getDate("end")
+                rs.getTimestamp("start"),
+                rs.getTimestamp("end")
         );
     }
     
