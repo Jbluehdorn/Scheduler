@@ -6,7 +6,11 @@
 package jbluehdorn.Scheduler.controllers;
 
 import fxml.components.TimeTextField;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -15,6 +19,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javax.xml.bind.ValidationException;
 import jbluehdorn.Scheduler.models.Customer;
 import jbluehdorn.Scheduler.repositories.CustomerRepository;
 import jbluehdorn.Scheduler.util.Logger;
@@ -48,6 +53,14 @@ public class AppointmentFormController {
     
     //Constants
     private final String EMPTY_STRING = "";
+    private final String TITLE_EMPTY_ERR = "Title is required";
+    private final String CUSTOMER_EMPTY_ERR = "Customer is required";
+    private final String LOCATION_EMPTY_ERR = "Location is required";
+    private final String DATE_EMPTY_ERR = "Date is required";
+    private final String START_EMPTY_ERR = "Start time is required";
+    private final String END_EMPTY_ERR = "End time is required";
+    private final String START_END_MISMATCH_ERR = "End time cannot be before start time";
+    private final String PARSE_ERR = "Start or end time could not be parsed";
     
     public void initialize() {
         this.populateCustomerCombo();
@@ -55,7 +68,11 @@ public class AppointmentFormController {
     
     @FXML
     public void btnSavePressed() {
-        
+        try {
+            this.validateForm();
+        } catch(ValidationException ex) {
+            this.showError(ex.getMessage());
+        }
     }
     
     private void populateCustomerCombo() {
@@ -69,6 +86,40 @@ public class AppointmentFormController {
             Logger.error(ex.getMessage());
             ex.printStackTrace();
         }
+    }
+    
+    private void validateForm() throws ValidationException {
+        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm a");
+        
+        if(this.txtTitle.getText().equals(EMPTY_STRING))
+            throw new ValidationException(TITLE_EMPTY_ERR);
+        
+        if(this.cmbCustomer.getValue() == null) 
+            throw new ValidationException(CUSTOMER_EMPTY_ERR);
+        
+        if(this.txtLocation.getText().equals(EMPTY_STRING))
+            throw new ValidationException(LOCATION_EMPTY_ERR);
+        
+        if(this.pickerDate.getValue() == null)
+            throw new ValidationException(DATE_EMPTY_ERR);
+        
+        if(this.txtStart.getText().equals(EMPTY_STRING))
+            throw new ValidationException(START_EMPTY_ERR);
+        
+        if(this.txtEnd.getText().equals(EMPTY_STRING))
+            throw new ValidationException(END_EMPTY_ERR);
+        
+        try {
+            Date start = formatter.parse(this.txtStart.getText());
+            Date end = formatter.parse(this.txtEnd.getText());
+            
+            if(start.after(end) || start.equals(end))
+                throw new ValidationException(START_END_MISMATCH_ERR);
+        } catch(ParseException ex) {
+            throw new ValidationException(PARSE_ERR);
+        }
+        
+        this.hideError();
     }
     
     private void showError(String message) {
