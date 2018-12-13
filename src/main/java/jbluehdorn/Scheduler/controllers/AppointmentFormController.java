@@ -107,6 +107,13 @@ public class AppointmentFormController {
         }
     }
     
+    @FXML
+    public void btnCancelPressed() {
+        appointmentToEdit = null;
+        
+        this.stageManager.switchScene(FxmlView.SCHEDULER);
+    }
+    
     private void populateCustomerCombo() {
         try {
             Iterable<Customer> customers = CustomerRepository.get();
