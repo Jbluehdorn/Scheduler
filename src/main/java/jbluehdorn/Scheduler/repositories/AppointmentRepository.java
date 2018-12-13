@@ -124,7 +124,7 @@ public class AppointmentRepository {
         
         //Calendar for date Objects
         Calendar cal = Calendar.getInstance();
-        java.sql.Date now = new java.sql.Date(cal.getTime().getTime());
+        java.sql.Timestamp now = new java.sql.Timestamp(cal.getTime().getTime());
         
         //Query to run
         String query = "UPDATE appointment "
@@ -139,9 +139,9 @@ public class AppointmentRepository {
         stmt.setString(4, appointment.getLocation());
         stmt.setString(5, appointment.getContact());
         stmt.setString(6, appointment.getUrl());
-        stmt.setDate(7, new java.sql.Date(appointment.getStartDate().getTime()));
-        stmt.setDate(8, new java.sql.Date(appointment.getEndDate().getTime()));
-        stmt.setDate(9, now);
+        stmt.setTimestamp(7, new java.sql.Timestamp(appointment.getStartDate().getTime()));
+        stmt.setTimestamp(8, new java.sql.Timestamp(appointment.getEndDate().getTime()));
+        stmt.setTimestamp(9, now);
         stmt.setString(10, updateBy);
         stmt.setInt(11, appointment.getId());
         

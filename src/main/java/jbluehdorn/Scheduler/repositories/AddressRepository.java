@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.Random;
 import java.util.stream.Collectors;
 import jbluehdorn.Scheduler.models.Address;
@@ -75,7 +76,7 @@ public class AddressRepository {
         
         //Calendar for date objects
         Calendar cal = Calendar.getInstance();
-        Date now = new Date(cal.getTime().getTime());
+        Timestamp now = new Timestamp(cal.getTime().getTime());
         
         //Query to run
         String query = "INSERT INTO address (addressId, address, address2, cityId, postalCode, phone, createDate, createdBy, lastUpdate, lastUpdateBy) "
@@ -89,9 +90,9 @@ public class AddressRepository {
         stmt.setInt(4, city.getId());
         stmt.setString(5, postalCode);
         stmt.setString(6, phone);
-        stmt.setDate(7, now);
+        stmt.setTimestamp(7, now);
         stmt.setString(8, createdBy);
-        stmt.setDate(9, now);
+        stmt.setTimestamp(9, now);
         stmt.setString(10, createdBy);
         
         //Execute and return
@@ -116,7 +117,7 @@ public class AddressRepository {
         
         //Calendar for date objects
         Calendar cal = Calendar.getInstance();
-        Date now = new Date(cal.getTime().getTime());
+        Timestamp now = new Timestamp(cal.getTime().getTime());
         
         //Query to run
         String query = "UPDATE address "
@@ -130,7 +131,7 @@ public class AddressRepository {
         stmt.setInt(3, address.getCity().getId());
         stmt.setString(4, address.getPostalCode());
         stmt.setString(5, address.getPhone());
-        stmt.setDate(6, now);
+        stmt.setTimestamp(6, now);
         stmt.setString(7, UserRepository.getCurrentUser().getUserName());
         stmt.setInt(8, address.getId());
         

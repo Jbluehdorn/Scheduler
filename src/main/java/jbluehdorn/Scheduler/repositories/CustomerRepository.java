@@ -70,7 +70,7 @@ public class CustomerRepository {
         
         //Calendar for date objects
         Calendar cal = Calendar.getInstance();
-        Date now = new Date(cal.getTime().getTime());
+        Timestamp now = new Timestamp(cal.getTime().getTime());
         
         //Query to run
         String query = "INSERT INTO customer (customerId, customerName, addressId, active, createDate, createdBy, lastUpdate, lastUpdateBy) "
@@ -82,9 +82,9 @@ public class CustomerRepository {
         stmt.setString(2, name);
         stmt.setInt(3, address.getId());
         stmt.setBoolean(4, true);
-        stmt.setDate(5, now);
+        stmt.setTimestamp(5, now);
         stmt.setString(6, createdBy);
-        stmt.setDate(7, now);
+        stmt.setTimestamp(7, now);
         stmt.setString(8, createdBy);
         
         //Execute and return

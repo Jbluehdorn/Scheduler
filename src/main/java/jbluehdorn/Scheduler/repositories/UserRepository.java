@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Random;
@@ -80,7 +81,7 @@ public class UserRepository {
         
         //Calendar for date objects
         Calendar cal = Calendar.getInstance();
-        Date now = new Date(cal.getTime().getTime());
+        Timestamp now = new Timestamp(cal.getTime().getTime());
         
         //Query to run
         String query = "insert into user (userId, userName, password, active, createBy, createDate, lastUpdate, lastUpdatedBy)"
@@ -93,8 +94,8 @@ public class UserRepository {
         stmt.setString(3, Hasher.hash(password));
         stmt.setBoolean(4, true);
         stmt.setString(5, createdBy);
-        stmt.setDate(6, now);
-        stmt.setDate(7, now);
+        stmt.setTimestamp(6, now);
+        stmt.setTimestamp(7, now);
         stmt.setString(8, createdBy);
         
         //Execute and return
