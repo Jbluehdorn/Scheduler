@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -77,7 +78,7 @@ public class AppointmentRepository {
         
         //Calendar for Date Objects
         Calendar cal = Calendar.getInstance();
-        java.sql.Date now = new java.sql.Date(cal.getTime().getTime());
+        Timestamp now = new Timestamp(cal.getTime().getTime());
         
         //Query to run
         String query = "INSERT INTO appointment (appointmentId, customerId, title, description, location, contact, url, start, end, createDate, createdBy, lastUpdate, lastUpdateBy) "
@@ -92,11 +93,11 @@ public class AppointmentRepository {
         stmt.setString(5, location);
         stmt.setString(6, contact);
         stmt.setString(7, url);
-        stmt.setDate(8, new java.sql.Date(start.getTime()));
-        stmt.setDate(9, new java.sql.Date(end.getTime()));
-        stmt.setDate(10, now);
+        stmt.setTimestamp(8, new Timestamp(start.getTime()));
+        stmt.setTimestamp(9, new Timestamp(end.getTime()));
+        stmt.setTimestamp(10,now);
         stmt.setString(11, createdBy);
-        stmt.setDate(12, now);
+        stmt.setTimestamp(12, now);
         stmt.setString(13, createdBy);
         
         //Execute and return

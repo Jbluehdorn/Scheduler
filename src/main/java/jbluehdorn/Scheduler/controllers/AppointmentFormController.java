@@ -6,11 +6,13 @@
 package jbluehdorn.Scheduler.controllers;
 
 import fxml.components.TimeTextField;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.TimeZone;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -20,9 +22,15 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javax.xml.bind.ValidationException;
+import jbluehdorn.Scheduler.models.Appointment;
 import jbluehdorn.Scheduler.models.Customer;
+import jbluehdorn.Scheduler.repositories.AppointmentRepository;
 import jbluehdorn.Scheduler.repositories.CustomerRepository;
 import jbluehdorn.Scheduler.util.Logger;
+import jbluehdorn.Scheduler.view.FxmlView;
+import jbluehdorn.Scheduler.view.StageManager;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 /**
@@ -51,7 +59,11 @@ public class AppointmentFormController {
     @FXML
     private TimeTextField txtEnd;
     
+    //Data
+    private static Appointment appointmentToEdit;
+    
     //Constants
+    private final StageManager stageManager;
     private final String EMPTY_STRING = "";
     private final String TITLE_EMPTY_ERR = "Title is required";
     private final String CUSTOMER_EMPTY_ERR = "Customer is required";
@@ -61,16 +73,36 @@ public class AppointmentFormController {
     private final String END_EMPTY_ERR = "End time is required";
     private final String START_END_MISMATCH_ERR = "End time cannot be before start time";
     private final String PARSE_ERR = "Start or end time could not be parsed";
+    private final String DB_ERR = "Failed to save properly";
+    
+    @Autowired @Lazy
+    public AppointmentFormController(StageManager stageManager) {
+        this.stageManager = stageManager;
+    }
     
     public void initialize() {
         this.populateCustomerCombo();
+    }
+    
+    public static void setAppointmentToEdit(Appointment appointment) {
+        appointmentToEdit = appointment;
     }
     
     @FXML
     public void btnSavePressed() {
         try {
             this.validateForm();
+            
+            if(appointmentToEdit != null) {
+                
+            } else {
+                if(this.newAppointmentFromForm() != null) {
+                    this.stageManager.switchScene(FxmlView.SCHEDULER);
+                }
+            }
+            
         } catch(ValidationException ex) {
+            Logger.error(ex.getMessage());
             this.showError(ex.getMessage());
         }
     }
@@ -84,12 +116,44 @@ public class AppointmentFormController {
             this.cmbCustomer.setItems(customersObs);
         } catch(Exception ex) {
             Logger.error(ex.getMessage());
-            ex.printStackTrace();
+            this.showError(ex.getMessage());
+        }
+    }
+    
+    private Appointment newAppointmentFromForm() {
+        try {
+            SimpleDateFormat formatter = new SimpleDateFormat("hh:mm a");
+            Date day = java.sql.Date.valueOf(this.pickerDate.getValue());
+            
+            //Adjust time for offset
+            TimeZone tz = TimeZone.getDefault();
+            long offset = tz.getOffset(day.getTime());
+            
+            Date start = new Date(day.getTime() + formatter.parse(this.txtStart.getText()).getTime() + offset);
+            Date end = new Date(day.getTime() + formatter.parse(this.txtEnd.getText()).getTime() + offset);
+            
+            return AppointmentRepository.create(
+                    this.txtTitle.getText(),
+                    this.txtDesc.getText(),
+                    this.txtLocation.getText(),
+                    this.txtContact.getText(),
+                    EMPTY_STRING,
+                    (Customer) this.cmbCustomer.getSelectionModel().getSelectedItem(),
+                    start,
+                    end
+            );
+        } catch(SQLException ex) {
+            Logger.error(ex.getMessage());
+            this.showError(DB_ERR);
+            return null;
+        } catch(ParseException ex) {
+            this.showError(PARSE_ERR);
+            return null;
         }
     }
     
     private void validateForm() throws ValidationException {
-        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm a");
+        SimpleDateFormat formatter = new SimpleDateFormat("hh:mm a");
         
         if(this.txtTitle.getText().equals(EMPTY_STRING))
             throw new ValidationException(TITLE_EMPTY_ERR);
