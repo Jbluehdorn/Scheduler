@@ -7,8 +7,11 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javax.xml.bind.ValidationException;
 import jbluehdorn.Scheduler.models.Appointment;
 import jbluehdorn.Scheduler.repositories.AppointmentRepository;
 import jbluehdorn.Scheduler.util.Logger;
@@ -64,7 +67,15 @@ public class AppointmentTabController {
     
     @FXML
     public void btnModPressed() {
-        
+        try {
+            Appointment app = this.getSelectedAppointment();
+            
+            AppointmentFormController.setAppointmentToEdit(app);
+            
+            this.stageManager.switchScene(FxmlView.APPOINTMENT_FORM);
+        } catch(ValidationException ex) {
+            this.showError(ex.getMessage());
+        }
     }
     
     @FXML
@@ -99,5 +110,20 @@ public class AppointmentTabController {
             Logger.error(ex.getMessage());
             ex.printStackTrace();
         }
+    }
+    
+    private Appointment getSelectedAppointment() throws ValidationException {
+        Appointment app = (Appointment) this.tblAppointments.getSelectionModel().getSelectedItem();
+        
+        if(app == null)
+            throw new ValidationException("No appointment selected");
+        
+        return app;
+    }
+    
+    private void showError(String error) {
+        Alert alert = new Alert(AlertType.ERROR);
+        alert.setHeaderText(error);
+        alert.showAndWait();
     }
 }

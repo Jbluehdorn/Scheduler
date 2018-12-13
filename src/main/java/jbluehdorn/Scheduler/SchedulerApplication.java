@@ -39,7 +39,7 @@ public class SchedulerApplication extends Application {
 //        stageManager.switchScene(FxmlView.LOGIN);
         try {
             UserRepository.validateCredentials("admin", "password");
-            stageManager.switchScene(FxmlView.APPOINTMENT_FORM);
+            stageManager.switchScene(FxmlView.SCHEDULER);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

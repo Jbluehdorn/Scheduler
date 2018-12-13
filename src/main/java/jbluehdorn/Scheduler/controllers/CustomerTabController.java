@@ -76,7 +76,6 @@ public class CustomerTabController implements FxmlController {
             
             this.stageManager.switchScene(FxmlView.CUSTOMER_FORM);
         } catch(ValidationException ex) {
-            Logger.error(ex.getMessage());
             this.showError(ex.getMessage());
         }
     }

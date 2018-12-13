@@ -9,6 +9,7 @@ import fxml.components.TimeTextField;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
@@ -82,6 +83,9 @@ public class AppointmentFormController {
     
     public void initialize() {
         this.populateCustomerCombo();
+        
+        if(appointmentToEdit != null)
+            this.populateEditForm();
     }
     
     public static void setAppointmentToEdit(Appointment appointment) {
@@ -94,7 +98,9 @@ public class AppointmentFormController {
             this.validateForm();
             
             if(appointmentToEdit != null) {
-                
+                if(this.updateAppointmentFromForm()) {
+                    this.stageManager.switchScene(FxmlView.SCHEDULER);
+                }
             } else {
                 if(this.newAppointmentFromForm() != null) {
                     this.stageManager.switchScene(FxmlView.SCHEDULER);
@@ -112,6 +118,19 @@ public class AppointmentFormController {
         appointmentToEdit = null;
         
         this.stageManager.switchScene(FxmlView.SCHEDULER);
+    }
+    
+    private void populateEditForm() {
+        SimpleDateFormat formatter = new SimpleDateFormat("hh:mm a");
+            
+        this.txtTitle.setText(appointmentToEdit.getTitle());
+        this.cmbCustomer.setValue(appointmentToEdit.getCustomer());
+        this.txtDesc.setText(appointmentToEdit.getDescription());
+        this.txtLocation.setText(appointmentToEdit.getLocation());
+        this.txtContact.setText(appointmentToEdit.getContact());
+        this.pickerDate.setValue(appointmentToEdit.getStartDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+        this.txtStart.setText(formatter.format(appointmentToEdit.getStartDate()));
+        this.txtEnd.setText(formatter.format(appointmentToEdit.getEndDate()));
     }
     
     private void populateCustomerCombo() {
@@ -156,6 +175,37 @@ public class AppointmentFormController {
         } catch(ParseException ex) {
             this.showError(PARSE_ERR);
             return null;
+        }
+    }
+    
+    private Boolean updateAppointmentFromForm() {
+        try {
+            SimpleDateFormat formatter = new SimpleDateFormat("hh:mm a");
+            Date day = java.sql.Date.valueOf(this.pickerDate.getValue());
+            
+            //Adjust time for offset
+            TimeZone tz = TimeZone.getDefault();
+            long offset = tz.getOffset(day.getTime());
+            
+            Date start = new Date(day.getTime() + formatter.parse(this.txtStart.getText()).getTime() + offset);
+            Date end = new Date(day.getTime() + formatter.parse(this.txtEnd.getText()).getTime() + offset);
+            
+            appointmentToEdit.setTitle(this.txtTitle.getText());
+            appointmentToEdit.setCustomer((Customer) this.cmbCustomer.getValue());
+            appointmentToEdit.setDescription(this.txtDesc.getText());
+            appointmentToEdit.setLocation(this.txtLocation.getText());
+            appointmentToEdit.setContact(this.txtContact.getText());
+            appointmentToEdit.setStartDate(start);
+            appointmentToEdit.setEndDate(end);
+            
+            return AppointmentRepository.update(appointmentToEdit);
+        } catch(SQLException ex) {
+            Logger.error(ex.getMessage());
+            this.showError(DB_ERR);
+            return false;
+        } catch(ParseException ex) {
+            this.showError(PARSE_ERR);
+            return false;
         }
     }
     
