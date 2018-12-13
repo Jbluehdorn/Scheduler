@@ -1,14 +1,17 @@
 package jbluehdorn.Scheduler.controllers;
 
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Optional;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javax.xml.bind.ValidationException;
@@ -80,7 +83,24 @@ public class AppointmentTabController {
     
     @FXML
     public void btnDelPressed() {
-        
+        try {
+            Appointment app = this.getSelectedAppointment();
+            
+            Alert alert = new Alert(AlertType.CONFIRMATION);
+            alert.setTitle("Confirm Delete");
+            alert.setHeaderText("Are you sure you want to delete " + app.getTitle() + "?");
+            
+            Optional<ButtonType> result = alert.showAndWait();
+            if(result.get() == ButtonType.OK) {
+                AppointmentRepository.delete(app.getId());
+                this.populateTable();
+            }
+        } catch(ValidationException ex) {
+            this.showError(ex.getMessage());
+        } catch(SQLException ex) {
+            Logger.error(ex.getMessage());
+            this.showError("Delete was unsuccessful");
+        }
     }
     
     /***

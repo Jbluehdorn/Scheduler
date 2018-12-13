@@ -95,11 +95,9 @@ public class CustomerTabController implements FxmlController {
                 this.populateTable();
             }
         } catch(ValidationException ex) {
-            Logger.error(ex.getMessage());
             this.showError(ex.getMessage());
         } catch(SQLException ex) {
             Logger.error(ex.getMessage());
-            ex.printStackTrace();
             this.showError("Delete was unsuccessful");
         }
     }
