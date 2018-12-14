@@ -9,6 +9,8 @@ import fxml.components.TimeTextField;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -18,6 +20,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
@@ -83,6 +86,7 @@ public class AppointmentFormController {
     
     public void initialize() {
         this.populateCustomerCombo();
+        this.constrainDates();
         
         if(appointmentToEdit != null)
             this.populateEditForm();
@@ -118,6 +122,20 @@ public class AppointmentFormController {
         appointmentToEdit = null;
         
         this.stageManager.switchScene(FxmlView.SCHEDULER);
+    }
+    
+    private void constrainDates() {
+        this.pickerDate.setDayCellFactory(picker -> new DateCell() {
+            public void updateItem(LocalDate date, boolean empty) {
+                super.updateItem(date, empty);
+                LocalDate today = LocalDate.now();
+                
+                setDisable(date.getDayOfWeek() == DayOfWeek.SATURDAY ||
+                        date.getDayOfWeek() == DayOfWeek.SUNDAY ||
+                        date.compareTo(today) < 0 ||
+                        empty);
+            }
+        });
     }
     
     private void populateEditForm() {
