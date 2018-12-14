@@ -103,6 +103,8 @@ public class AppointmentFormController {
             
             if(appointmentToEdit != null) {
                 if(this.updateAppointmentFromForm()) {
+                    this.clearEditForm();
+                    
                     this.stageManager.switchScene(FxmlView.SCHEDULER);
                 }
             } else {
@@ -119,9 +121,22 @@ public class AppointmentFormController {
     
     @FXML
     public void btnCancelPressed() {
-        appointmentToEdit = null;
+        this.clearEditForm();
         
         this.stageManager.switchScene(FxmlView.SCHEDULER);
+    }
+    
+    private void clearEditForm() {
+        appointmentToEdit = null;
+        
+        this.txtTitle.setText(EMPTY_STRING);
+        this.cmbCustomer.setValue(null);
+        this.txtDesc.setText(EMPTY_STRING);
+        this.txtLocation.setText(EMPTY_STRING);
+        this.txtContact.setText(EMPTY_STRING);
+        this.pickerDate.setValue(null);
+        this.txtStart.setText(EMPTY_STRING);
+        this.txtEnd.setText(EMPTY_STRING);
     }
     
     private void constrainDates() {
@@ -193,6 +208,9 @@ public class AppointmentFormController {
         } catch(ParseException ex) {
             this.showError(PARSE_ERR);
             return null;
+        } catch(ValidationException ex) {
+            this.showError(ex.getMessage());
+            return null;
         }
     }
     
@@ -223,6 +241,9 @@ public class AppointmentFormController {
             return false;
         } catch(ParseException ex) {
             this.showError(PARSE_ERR);
+            return false;
+        } catch(ValidationException ex) {
+            this.showError(ex.getMessage());
             return false;
         }
     }

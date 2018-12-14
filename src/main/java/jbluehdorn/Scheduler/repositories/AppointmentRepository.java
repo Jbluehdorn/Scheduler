@@ -15,6 +15,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
 import java.util.stream.Collectors;
+import javax.xml.bind.ValidationException;
 import jbluehdorn.Scheduler.models.Appointment;
 import jbluehdorn.Scheduler.models.Customer;
 import jbluehdorn.Scheduler.util.DB;
@@ -69,7 +70,10 @@ public class AppointmentRepository {
      * @return the new Appointment
      * @throws SQLException 
      */
-    public static Appointment create(String title, String description, String location, String contact, String url, Customer customer, Date start, Date end) throws SQLException {
+    public static Appointment create(String title, String description, String location, String contact, String url, Customer customer, Date start, Date end) throws SQLException, ValidationException {
+        if(checkOverlap(start, end))
+            throw new ValidationException("Times overlap with existing appointment");
+        
         String createdBy = UserRepository.getCurrentUser().getUserName();
         int id = generateUniqueId();
         
@@ -116,7 +120,10 @@ public class AppointmentRepository {
      * @return success
      * @throws SQLException 
      */
-    public static Boolean update(Appointment appointment) throws SQLException {
+    public static Boolean update(Appointment appointment) throws SQLException, ValidationException {
+        if(checkOverlap(appointment.getStartDate(), appointment.getEndDate()))
+            throw new ValidationException("Times overlap with existing appointment");
+        
         String updateBy = UserRepository.getCurrentUser().getUserName();
         
         //Get Connection
@@ -174,6 +181,21 @@ public class AppointmentRepository {
         }
         
         return false;
+    }
+    
+    private static Boolean checkOverlap(Date start, Date end) {
+        Boolean overlap = false;
+        
+        for(Appointment existing : allAppointments) {
+            if((start.after(existing.getStartDate()) && start.before(existing.getEndDate())) ||
+                    (end.after(existing.getStartDate()) && end.before(existing.getEndDate())) ||
+                    (start.before(existing.getStartDate()) && end.after(existing.getEndDate())) ||
+                    (start.after(existing.getStartDate()) && end.before(existing.getEndDate()))) {
+                overlap = true;
+            }
+        }
+        
+        return overlap;
     }
     
     /***
