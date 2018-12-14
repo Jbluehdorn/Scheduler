@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -26,6 +27,7 @@ import jbluehdorn.Scheduler.util.DB;
  */
 public class AppointmentRepository {
     private static ArrayList<Appointment> allAppointments = new ArrayList<>();
+    private static int imminentAppointmentTime = 15;
     
     /***
      * Get all appointments
@@ -183,7 +185,30 @@ public class AppointmentRepository {
         return false;
     }
     
-    private static Boolean checkOverlap(Date start, Date end) {
+    public static Appointment checkIminentAppointment() throws SQLException {
+        updateIfEmpty();
+        
+        Date now = new Date();
+        for(Appointment app : allAppointments) {
+            long timeDiff = app.getStartDate().getTime() - now.getTime();
+            
+            if(timeDiff >= imminentAppointmentTime * 60 * 1000 && timeDiff > 0)
+                return app;
+        }
+        
+        return null;
+    }
+    
+    /***
+     * Check for overlapping start and and end dates for appointments
+     * 
+     * @param start
+     * @param end
+     * @return 
+     */
+    private static Boolean checkOverlap(Date start, Date end) throws SQLException {
+        updateIfEmpty();
+        
         Boolean overlap = false;
         
         for(Appointment existing : allAppointments) {

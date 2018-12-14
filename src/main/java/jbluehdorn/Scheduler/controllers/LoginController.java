@@ -9,10 +9,14 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import jbluehdorn.Scheduler.models.Appointment;
+import jbluehdorn.Scheduler.repositories.AppointmentRepository;
 import jbluehdorn.Scheduler.repositories.UserRepository;
 import jbluehdorn.Scheduler.util.Logger;
 import jbluehdorn.Scheduler.view.FxmlView;
@@ -67,6 +71,14 @@ public class LoginController implements FxmlController {
         try {
             if(UserRepository.validateCredentials(username, password)) {
                 Logger.login(username);
+                Appointment app = AppointmentRepository.checkIminentAppointment();
+                if(app != null) {
+                    Alert alert = new Alert(AlertType.WARNING);
+                    alert.setHeaderText("Warning");
+                    alert.setContentText(app.getTitle() + " is starting shortly");
+                    alert.show();
+                }
+                
                 stageManager.switchScene(FxmlView.SCHEDULER);
             } else {
                 lblStatus.setVisible(true);
