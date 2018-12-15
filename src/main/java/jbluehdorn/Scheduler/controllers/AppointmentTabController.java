@@ -12,6 +12,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javax.xml.bind.ValidationException;
@@ -49,6 +50,8 @@ public class AppointmentTabController {
     private TableColumn<Appointment, String> colStart;
     @FXML
     private TableColumn<Appointment, String> colEnd;
+    @FXML
+    private ComboBox cmbGranularity;
     
     //Constants
     private final StageManager stageManager;
@@ -60,7 +63,13 @@ public class AppointmentTabController {
     
     public void initialize() {
         this.mapColumns();
-        this.populateTable();
+        this.cmbGranularity.setValue("All");
+        this.populateTable(this.getGranularity());
+    }
+    
+    @FXML
+    public void cmbGranularityChanged() {
+        this.populateTable(this.getGranularity());
     }
     
     @FXML
@@ -93,13 +102,28 @@ public class AppointmentTabController {
             Optional<ButtonType> result = alert.showAndWait();
             if(result.get() == ButtonType.OK) {
                 AppointmentRepository.delete(app.getId());
-                this.populateTable();
+                this.populateTable(this.getGranularity());
             }
         } catch(ValidationException ex) {
             this.showError(ex.getMessage());
         } catch(SQLException ex) {
             Logger.error(ex.getMessage());
             this.showError("Delete was unsuccessful");
+        }
+    }
+    
+    private AppointmentRepository.Granularity getGranularity() {
+        switch(this.cmbGranularity.getSelectionModel().getSelectedItem().toString()) {
+            case "Today":
+                return AppointmentRepository.Granularity.TODAY;
+            case "This Week":
+                return AppointmentRepository.Granularity.THIS_WEEK;
+            case "This Month":
+                return AppointmentRepository.Granularity.THIS_MONTH;
+            case "All":
+                return AppointmentRepository.Granularity.ALL;
+            default:
+                return AppointmentRepository.Granularity.ALL;
         }
     }
     
@@ -119,9 +143,9 @@ public class AppointmentTabController {
     /***
      * Get appointments and throw them in the table
      */
-    private void populateTable() {
+    private void populateTable(AppointmentRepository.Granularity granularity) {
         try {
-            Iterable<Appointment> apps = AppointmentRepository.get();
+            Iterable<Appointment> apps = AppointmentRepository.get(granularity);
             
             ObservableList<Appointment> appsObs = FXCollections.observableArrayList((ArrayList) apps);
             

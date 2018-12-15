@@ -28,6 +28,12 @@ import jbluehdorn.Scheduler.util.DB;
 public class AppointmentRepository {
     private static ArrayList<Appointment> allAppointments = new ArrayList<>();
     private static int imminentAppointmentTime = 15;
+    public enum Granularity {
+        TODAY,
+        THIS_WEEK,
+        THIS_MONTH,
+        ALL
+    }
     
     /***
      * Get all appointments
@@ -36,9 +42,55 @@ public class AppointmentRepository {
      * @throws SQLException 
      */
     public static Iterable<Appointment> get() throws SQLException {
+        return get(Granularity.ALL);
+    }
+    
+    /***
+     * Gets all appointments from a specific granularity
+     * 
+     * @param granularity
+     * @return Iterable<Appointment>
+     * @throws SQLException 
+     */
+    public static Iterable<Appointment> get(Granularity granularity) throws SQLException {
         updateIfEmpty();
         
-        return allAppointments;
+        Calendar appCal = Calendar.getInstance();
+        Calendar now = Calendar.getInstance();
+        
+        switch(granularity) {
+            case TODAY:
+                return allAppointments.stream()
+                        .filter(app -> {
+                            appCal.setTime(app.getStartDate());
+                            
+                            return appCal.get(Calendar.YEAR) == now.get(Calendar.YEAR)
+                                    && appCal.get(Calendar.DAY_OF_YEAR) == now.get(Calendar.DAY_OF_YEAR);
+                        })
+                        .collect(Collectors.<Appointment>toList());
+            case THIS_WEEK:
+                return allAppointments.stream()
+                        .filter(app -> {
+                            appCal.setTime(app.getStartDate());
+                            
+                            return appCal.get(Calendar.YEAR) == now.get(Calendar.YEAR)
+                                    && appCal.get(Calendar.WEEK_OF_YEAR) == now.get(Calendar.WEEK_OF_YEAR);
+                        })
+                        .collect(Collectors.<Appointment>toList());
+            case THIS_MONTH:
+                return allAppointments.stream()
+                        .filter(app -> {
+                            appCal.setTime(app.getStartDate());
+                            
+                            return appCal.get(Calendar.YEAR) == now.get(Calendar.YEAR)
+                                    && appCal.get(Calendar.MONTH) == now.get(Calendar.MONTH);
+                        })
+                        .collect(Collectors.<Appointment>toList());
+            case ALL:
+                return allAppointments;
+        }
+        
+        return null;
     }
     
     /***

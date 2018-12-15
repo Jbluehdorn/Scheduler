@@ -6,11 +6,29 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.*?>
+<?import javafx.collections.*?>
 
 <Tab fx:id="appointmentTab" text="Appointments" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jbluehdorn.Scheduler.controllers.AppointmentTabController">
     <content>
         <BorderPane>
             <top>
+                <HBox alignment="BASELINE_LEFT" spacing="2.5">
+                    <Label text="Granularity:" />
+                    <ComboBox fx:id="cmbGranularity" onAction="#cmbGranularityChanged">
+                        <items>
+                            <FXCollections fx:factory="observableArrayList">
+                                <String fx:value="All" />
+                                <String fx:value="This Week" />
+                                <String fx:value="This Month" />
+                                <String fx:value="Today" />
+                            </FXCollections>
+                        </items>
+                    </ComboBox>
+                    
+                    <padding>
+                        <Insets left="2.5" bottom="2.5" top="2.5" />
+                    </padding>
+                </HBox>
             </top>
             <center>
                 <TableView fx:id="tblAppointments">
