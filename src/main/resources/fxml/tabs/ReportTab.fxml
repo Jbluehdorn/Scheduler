@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+<?import javafx.collections.*?>
+
+<Tab fx:id="reportTab" xmlns:fx="http://javafx.com/fxml/1" text="Reports" fx:controller="jbluehdorn.Scheduler.controllers.ReportTabController" >
+    <content>
+        <BorderPane>
+            <top>
+                <HBox alignment="BASELINE_LEFT" spacing="2.5">
+                    <Label text="Type:" />
+                    <ComboBox fx:id="cmbType">
+                        <items>
+                            <FXCollections fx:factory="observableArrayList">
+                                <String fx:value="Appointments by Month" />
+                                <String fx:value="Customer Schedules" />
+                                <String fx:value="Customers by City" />
+                            </FXCollections>
+                        </items>
+                    </ComboBox>
+                    <HBox alignment="BASELINE_RIGHT" spacing="2.5" HBox.hgrow="ALWAYS">
+                        <Button fx:id="btnGenerate" onAction="#btnGeneratePressed" text="Generate Report" />
+                    </HBox>
+                    
+                    <padding>
+                        <Insets right="5" bottom="2.5" left="5" top="2.5" />
+                    </padding>
+                </HBox>
+            </top>
+            
+            <center>
+                <TextArea fx:id="txtReport" />
+            </center>
+        </BorderPane>
+    </content>
+</Tab>

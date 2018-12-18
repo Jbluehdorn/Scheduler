@@ -12,6 +12,7 @@
             <tabs>
                 <fx:include fx:id="customerTab" source="CustomerTab.fxml" />
                 <fx:include fx:id="appointmentTab" source="AppointmentTab.fxml" />
+                <fx:include fx:id="reportTab" source="ReportTab.fxml" />
             </tabs>
         </TabPane>
     </children>

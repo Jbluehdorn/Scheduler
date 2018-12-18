@@ -5,6 +5,8 @@
  */
 package jbluehdorn.Scheduler.models;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -62,6 +64,8 @@ public class Appointment {
     
     @Override
     public String toString() {
-        return String.format("%s for %s on %s", this.title, this.customer.getName(), this.start);
+        DateFormat formatter = new SimpleDateFormat("M/dd @ h:mm a");
+        
+        return String.format("%s for %s on %s", this.title, this.customer.getName(), formatter.format(this.start));
     }
 }
