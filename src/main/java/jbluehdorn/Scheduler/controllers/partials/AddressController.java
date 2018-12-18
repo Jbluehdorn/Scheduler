@@ -163,8 +163,6 @@ public class AddressController {
     }
     
     public void clearEditForm() {
-        this.addressToEdit = null;
-        
         this.txtAddress.setText(EMPTY_STRING);
         this.txtAddress2.setText(EMPTY_STRING);
         this.cmbCities.getSelectionModel().select(null);

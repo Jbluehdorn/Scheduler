@@ -69,7 +69,7 @@ public class CustomerFormController {
             this.validateForm();
             
             if(customerToEdit != null) {
-                if(this.updateCustomerFromForm()) {
+                if(this.updateCustomerFromForm() != null) {
                     this.clearEditForm();
                     this.stageManager.switchScene(FxmlView.SCHEDULER);
                 }
@@ -140,7 +140,7 @@ public class CustomerFormController {
     private Boolean updateCustomerFromForm() {
         try {
             customerToEdit.setName(this.txtName.getText());
-            customerToEdit.setAddress(this.partialAddressController.getAddress());
+            customerToEdit.setAddress(this.add);
             
             return CustomerRepository.update(customerToEdit);
         } catch(SQLException ex) {
