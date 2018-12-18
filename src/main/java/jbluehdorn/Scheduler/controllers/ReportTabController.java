@@ -10,7 +10,9 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import jbluehdorn.Scheduler.models.Appointment;
+import jbluehdorn.Scheduler.models.Customer;
 import jbluehdorn.Scheduler.repositories.AppointmentRepository;
+import jbluehdorn.Scheduler.repositories.CustomerRepository;
 import org.springframework.stereotype.Component;
 
 /*
@@ -40,9 +42,9 @@ public class ReportTabController {
         switch(this.cmbType.getSelectionModel().getSelectedItem().toString()) {
             case "Appointments by Month":
                 this.generateAppointmentsByMonthReport();
-                System.out.println("Stuff");
                 break;
             case "Customer Schedules":
+                this.generateCustomerSchedulesReport();
                 break;
             case "Customers by City":
                 break;
@@ -85,6 +87,38 @@ public class ReportTabController {
                 if(monthlyCount > 0) {
                     bodyText.append(this.getMonthsForInt(i).toUpperCase() + "\n");
                     bodyText.append(monthlyString.toString() + "\n");
+                }
+            }
+            
+            this.txtReport.setText(bodyText.toString());
+            
+        } catch(SQLException ex) {
+            this.showError(ex.getMessage());
+        }
+    }
+    
+    private void generateCustomerSchedulesReport() {
+        try {
+            StringBuilder bodyText = new StringBuilder();
+            bodyText.append("Appointments by Customer\n\n");
+            
+            ArrayList<Appointment> apps = (ArrayList<Appointment>) AppointmentRepository.get();
+            Iterable<Customer> customers = CustomerRepository.get();
+            
+            for(Customer cust : customers) {
+                int appointmentCount = 0;
+                StringBuilder customerString = new StringBuilder();
+                
+                for(Appointment app : apps) {
+                    if(app.getCustomer().getId() == cust.getId()) {
+                        customerString.append(app.toString() + "\n");
+                        appointmentCount++;
+                    }
+                }
+                
+                if(appointmentCount > 0) {
+                    bodyText.append(cust.getName() + "\n");
+                    bodyText.append(customerString.toString() + "\n");
                 }
             }
             
