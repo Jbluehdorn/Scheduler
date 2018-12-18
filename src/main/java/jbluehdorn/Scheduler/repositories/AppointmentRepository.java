@@ -244,7 +244,7 @@ public class AppointmentRepository {
         for(Appointment app : allAppointments) {
             long timeDiff = app.getStartDate().getTime() - now.getTime();
             
-            if(timeDiff >= imminentAppointmentTime * 60 * 1000 && timeDiff > 0)
+            if(timeDiff <= imminentAppointmentTime * 60 * 1000 && timeDiff > 0)
                 return app;
         }
         
