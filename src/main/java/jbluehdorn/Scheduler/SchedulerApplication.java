@@ -36,13 +36,7 @@ public class SchedulerApplication extends Application {
     }
     
     protected void displayInitialScene() {
-//        stageManager.switchScene(FxmlView.LOGIN);
-        try {
-            UserRepository.validateCredentials("admin", "password");
-            stageManager.switchScene(FxmlView.SCHEDULER);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        stageManager.switchScene(FxmlView.LOGIN);
     }
     
     private ConfigurableApplicationContext bootstrapSpringApplicationContext() {
