@@ -10,7 +10,9 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import jbluehdorn.Scheduler.models.Appointment;
+import jbluehdorn.Scheduler.models.City;
 import jbluehdorn.Scheduler.models.Customer;
+import jbluehdorn.Scheduler.repositories.AddressRepository;
 import jbluehdorn.Scheduler.repositories.AppointmentRepository;
 import jbluehdorn.Scheduler.repositories.CustomerRepository;
 import org.springframework.stereotype.Component;
@@ -47,6 +49,8 @@ public class ReportTabController {
                 this.generateCustomerSchedulesReport();
                 break;
             case "Customers by City":
+                System.out.println("Stuff");
+                this.generateCustomersByCityReport();
                 break;
         }
     }
@@ -63,7 +67,7 @@ public class ReportTabController {
     
     private void generateAppointmentsByMonthReport() {
         try {
-            ArrayList<Appointment> apps = (ArrayList<Appointment>) AppointmentRepository.get();
+            Iterable<Appointment> apps = AppointmentRepository.get();
             StringBuilder bodyText = new StringBuilder();
             
             bodyText.append("Appoinments by Month\n\n");
@@ -85,7 +89,7 @@ public class ReportTabController {
                 }
                 
                 if(monthlyCount > 0) {
-                    bodyText.append(this.getMonthsForInt(i).toUpperCase() + "\n");
+                    bodyText.append("---" + this.getMonthsForInt(i).toUpperCase() + "---\n");
                     bodyText.append(monthlyString.toString() + "\n");
                 }
             }
@@ -102,7 +106,7 @@ public class ReportTabController {
             StringBuilder bodyText = new StringBuilder();
             bodyText.append("Appointments by Customer\n\n");
             
-            ArrayList<Appointment> apps = (ArrayList<Appointment>) AppointmentRepository.get();
+            Iterable<Appointment> apps = AppointmentRepository.get();
             Iterable<Customer> customers = CustomerRepository.get();
             
             for(Customer cust : customers) {
@@ -117,8 +121,40 @@ public class ReportTabController {
                 }
                 
                 if(appointmentCount > 0) {
-                    bodyText.append(cust.getName() + "\n");
+                    bodyText.append("---" + cust.getName().toUpperCase() + "---\n");
                     bodyText.append(customerString.toString() + "\n");
+                }
+            }
+            
+            this.txtReport.setText(bodyText.toString());
+            
+        } catch(SQLException ex) {
+            this.showError(ex.getMessage());
+        }
+    }
+    
+    private void generateCustomersByCityReport() {
+        try {
+            StringBuilder bodyText = new StringBuilder();
+            bodyText.append("Customers by City\n\n");
+            
+            Iterable<Customer> customers = CustomerRepository.get();
+            Iterable<City> cities = AddressRepository.getCities();
+            
+            for(City city : cities) {
+                int customerCount = 0;
+                StringBuilder cityString = new StringBuilder();
+                
+                for(Customer customer : customers) {
+                    if(customer.getAddress().getCity().getId() == city.getId()) {
+                        cityString.append(customer.toString() + "\n");
+                        customerCount++;
+                    }
+                }
+                
+                if(customerCount > 0) {
+                    bodyText.append("---" + city.getName().toUpperCase() + "---\n");
+                    bodyText.append(cityString + "\n");
                 }
             }
             
